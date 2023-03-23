@@ -123,3 +123,9 @@ extension UITextField {
         self.rightViewMode = .always
     }
 }
+
+extension UITextView {
+    func setPadding(top: Int, left: Int, bottom: Int, right: Int){ //왼쪽에 여백 주기
+        self.textContainerInset = UIEdgeInsets(top: CGFloat(top), left: CGFloat(left), bottom: CGFloat(bottom), right: CGFloat(right))
+    }
+}

@@ -32,5 +32,17 @@ class AttributedStrings {
         
         return button
     }
+    
+    func attributitedButton(_ firstpart: String, _ secondpart: String) -> UIButton {
+        let button = UIButton(type: .system)
+        let attributedString = NSMutableAttributedString(string: firstpart, attributes: [.font: UIFont.systemFont(ofSize: 16), .foregroundColor: UIColor.carrotOrange500])
+        
+        attributedString.append(NSAttributedString(string: " \(secondpart)", attributes: [.font: UIFont.boldSystemFont(ofSize: 16), .foregroundColor: UIColor.carrotOrange500]))
+        
+        button.setAttributedTitle(attributedString, for: .normal)
+        
+        return button
+        
+    }
 }
 

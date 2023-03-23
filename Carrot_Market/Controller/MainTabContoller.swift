@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MainTabController : UITabBarController{
     // MARK: - Properties
@@ -27,8 +28,7 @@ class MainTabController : UITabBarController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
-        configureTabBarUI()
+        authenticateUserAndConfigureUI()
     }
     
 
@@ -42,6 +42,18 @@ class MainTabController : UITabBarController{
     }
     
     // MARK: - API
+    func authenticateUserAndConfigureUI() {
+        if Auth.auth().currentUser == nil {
+            DispatchQueue.main.async {
+                let nav = UINavigationController(rootViewController: LoginController())
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true)
+            }
+        } else {
+            configureUI()
+            configureTabBarUI()
+        }
+    }
     
     // MARK: - Helpers
     func configureUI() {
