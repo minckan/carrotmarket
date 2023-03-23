@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ProductCell: UICollectionViewCell {
     // MARK: - Properties
     var product: Product? {
         didSet {
-            
+            configure()
         }
     }
     
@@ -29,17 +30,16 @@ class ProductCell: UICollectionViewCell {
     private let productNameLabel : UILabel = {
        let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "IPhone 14"
         return label
     }()
     
     private let productPriceLabel : UILabel = {
        let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "$" + "1500"
         return label
     }()
     
+    let likesButton = AttributedStrings().LeftImageButton(withImage: UIImage(named: "heart")!)
 
     
     // MARK: - Lifecycle
@@ -65,9 +65,7 @@ class ProductCell: UICollectionViewCell {
         self.layer.addSublayer(border)
         self.layer.masksToBounds = true
         
-        let likesButton = AttributedStrings().LeftImageButton(withImage: UIImage(named: "heart")!, count: 0)
         addSubview(likesButton)
-        
         likesButton.anchor(bottom: bottomAnchor, right: rightAnchor, paddingBottom: 20, paddingRight: 20)
     
     }
@@ -80,5 +78,20 @@ class ProductCell: UICollectionViewCell {
     // MARK: - API
     
     // MARK: - Helpers
+    func configure() {
+        guard let product = product else {return}
+        
+        let viewModel = ProductViewModel(product: product)
+       
+        productNameLabel.text = product.name
+        productPriceLabel.text = viewModel.priceText
+        
+        productImageView.sd_setImage(with: product.productImagUrl)
+        
+        print("DEBUG: profile image url is \(product)")
+        
+        let title = NSAttributedString(string: String(product.likes), attributes: [.font: UIFont.systemFont(ofSize: 14)])
+        likesButton.setAttributedTitle(title, for: .normal)
+    }
     
 }

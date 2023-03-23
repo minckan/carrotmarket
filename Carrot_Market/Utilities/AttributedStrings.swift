@@ -8,16 +8,16 @@
 import UIKit
 
 class AttributedStrings {
-    func LeftImageButton(withImage image: UIImage, count: Int) -> UIButton {
+    func LeftImageButton(withImage image: UIImage) -> UIButton {
         let button = UIButton()
 
         button.setImage(image, for: .normal)
                 
-        let title = NSAttributedString(string: String(count), attributes: [.font: UIFont.systemFont(ofSize: 14)])
-        
+//        let title = NSAttributedString(string: String(count), attributes: [.font: UIFont.systemFont(ofSize: 14)])
+//
         // 텍스트 설정
-        button.setTitle("0", for: .normal)
-        button.setAttributedTitle(title, for: .normal)
+
+//        button.setAttributedTitle(title, for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         

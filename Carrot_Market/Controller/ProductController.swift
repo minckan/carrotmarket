@@ -13,6 +13,13 @@ class ProductController: UICollectionViewController {
 
     // MARK: - Properties
     
+    var products = [Product]() {
+        didSet {
+
+            collectionView.reloadData()
+        }
+    }
+    
     private lazy var headerSearchButton: UIBarButtonItem = {
         let button = UIButton()
         let barItem = UIBarButtonItem(customView: button)
@@ -38,13 +45,19 @@ class ProductController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        
+        fetchProduct()
+       
     }
 
     
     // MARK: - Selectors
     
     // MARK: - API
+    func fetchProduct() {
+        ProductService.shared.fetchProduct { products in
+            self.products = products
+        }
+    }
     
     // MARK: - Helpers
     func configureUI() {
@@ -66,13 +79,13 @@ class ProductController: UICollectionViewController {
 
 extension ProductController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return products.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProductCell
         
-        
+        cell.product = products[indexPath.row]
         
         return cell
     }

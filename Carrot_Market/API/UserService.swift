@@ -17,8 +17,18 @@ struct AuthCredential {
     let profileImage: UIImage
 }
 
-struct AuthService {
-    static let shared = AuthService()
+struct UserService {
+    static let shared = UserService()
+    
+    
+    func fetchUser(uid: String, completion: @escaping(User)->Void) {
+        REF_USER.child(uid).observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String:AnyObject] else {return}
+            let user = User(uid: uid, dictionary: dictionary)
+            completion(user)
+        }
+    }
+    
     func registerUser(credential: AuthCredential, completion: @escaping(Error?, DatabaseReference) -> Void) {
         let email = credential.email
         let password = credential.password

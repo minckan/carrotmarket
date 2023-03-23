@@ -8,13 +8,15 @@
 import Foundation
 
 struct Product {
+    let user: User
     let id: String
     var productImagUrl: URL?
     let name: String
     let price: Int
     let likes: Int
     
-    init(id: String, dictionary: [String: AnyObject]) {
+    init(user: User, id: String, dictionary: [String: AnyObject]) {
+        self.user = user
         self.id = id
         self.name = dictionary["name"] as? String ?? ""
         self.price = dictionary["price"] as? Int ?? 0

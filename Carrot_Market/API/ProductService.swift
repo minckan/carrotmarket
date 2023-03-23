@@ -53,4 +53,20 @@ struct ProductService {
             }
         }
     }
+    
+    func fetchProduct(completion: @escaping([Product])->Void) {
+        var products = [Product]()
+        
+        REF_PRODUCTS.observe(.childAdded) { snapshot in
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {return}
+            guard let uid = dictionary["uid"] as? String else {return}
+            let productId = snapshot.key
+            
+            UserService.shared.fetchUser(uid: uid) { user in
+                let product = Product(user: user, id: productId, dictionary: dictionary)
+                products.append(product)
+                completion(products)
+            }
+        }
+    }
 }
