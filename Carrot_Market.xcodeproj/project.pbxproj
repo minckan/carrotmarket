@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C3F765229CD576800D3D1AD /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765129CD576800D3D1AD /* SearchController.swift */; };
+		8C3F765429CD57D500D3D1AD /* CategoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765329CD57D500D3D1AD /* CategoryController.swift */; };
+		8C3F765629CD581F00D3D1AD /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765529CD581F00D3D1AD /* NotificationController.swift */; };
+		8C3F765C29CD5A1600D3D1AD /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765B29CD5A1600D3D1AD /* SearchCell.swift */; };
+		8C3F765E29CD5D9300D3D1AD /* SearchHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765D29CD5D9300D3D1AD /* SearchHeader.swift */; };
 		8C4395DC29C9382400E68B31 /* MainTabContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4395DB29C9382400E68B31 /* MainTabContoller.swift */; };
 		8C4395DE29C9409B00E68B31 /* ProductController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4395DD29C9409B00E68B31 /* ProductController.swift */; };
 		8C4395E029C940AE00E68B31 /* CommunityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4395DF29C940AE00E68B31 /* CommunityController.swift */; };
@@ -42,6 +47,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8C3F765129CD576800D3D1AD /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		8C3F765329CD57D500D3D1AD /* CategoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryController.swift; sourceTree = "<group>"; };
+		8C3F765529CD581F00D3D1AD /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		8C3F765B29CD5A1600D3D1AD /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
+		8C3F765D29CD5D9300D3D1AD /* SearchHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHeader.swift; sourceTree = "<group>"; };
 		8C4395DB29C9382400E68B31 /* MainTabContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabContoller.swift; sourceTree = "<group>"; };
 		8C4395DD29C9409B00E68B31 /* ProductController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductController.swift; sourceTree = "<group>"; };
 		8C4395DF29C940AE00E68B31 /* CommunityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityController.swift; sourceTree = "<group>"; };
@@ -89,10 +99,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8C4395D529C9375E00E68B31 /* View */ = {
+		8C3F765729CD587D00D3D1AD /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				8C4395E529C940E300E68B31 /* MyPageController.swift */,
+				8C4395E129C940BB00E68B31 /* ChatController.swift */,
+				8C4395E329C940C400E68B31 /* LiveController.swift */,
+				8C4395DF29C940AE00E68B31 /* CommunityController.swift */,
+				8C4395DD29C9409B00E68B31 /* ProductController.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		8C3F765829CD58C600D3D1AD /* Side */ = {
+			isa = PBXGroup;
+			children = (
+				8C3F765129CD576800D3D1AD /* SearchController.swift */,
+				8C3F765529CD581F00D3D1AD /* NotificationController.swift */,
+				8C3F765329CD57D500D3D1AD /* CategoryController.swift */,
+			);
+			path = Side;
+			sourceTree = "<group>";
+		};
+		8C3F765929CD59E600D3D1AD /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				8C3F765B29CD5A1600D3D1AD /* SearchCell.swift */,
+				8C3F765D29CD5D9300D3D1AD /* SearchHeader.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		8C3F765A29CD59F900D3D1AD /* Product */ = {
 			isa = PBXGroup;
 			children = (
 				8C4395EA29C95C0600E68B31 /* ProductCell.swift */,
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
+		8C4395D529C9375E00E68B31 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8C3F765A29CD59F900D3D1AD /* Product */,
+				8C3F765929CD59E600D3D1AD /* Search */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -108,13 +158,10 @@
 		8C4395D729C9377600E68B31 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				8C3F765729CD587D00D3D1AD /* TabBar */,
 				8C4395E929C94ED100E68B31 /* Authentication */,
+				8C3F765829CD58C600D3D1AD /* Side */,
 				8C4395DB29C9382400E68B31 /* MainTabContoller.swift */,
-				8C4395DD29C9409B00E68B31 /* ProductController.swift */,
-				8C4395DF29C940AE00E68B31 /* CommunityController.swift */,
-				8C4395E129C940BB00E68B31 /* ChatController.swift */,
-				8C4395E329C940C400E68B31 /* LiveController.swift */,
-				8C4395E529C940E300E68B31 /* MyPageController.swift */,
 				8C4395F229C9789300E68B31 /* UploadController.swift */,
 			);
 			path = Controller;
@@ -279,25 +326,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C3F765629CD581F00D3D1AD /* NotificationController.swift in Sources */,
 				8C4395E629C940E300E68B31 /* MyPageController.swift in Sources */,
 				8C4395DC29C9382400E68B31 /* MainTabContoller.swift in Sources */,
 				8C4395F329C9789300E68B31 /* UploadController.swift in Sources */,
 				8C4395F529C980C000E68B31 /* Utilities.swift in Sources */,
 				8CA9F4BA29CBDF1200627606 /* RegistrationController.swift in Sources */,
+				8C3F765429CD57D500D3D1AD /* CategoryController.swift in Sources */,
 				8C4395F129C972C000E68B31 /* Common.swift in Sources */,
 				8CA9F4C729CC4E6D00627606 /* ProductViewModel.swift in Sources */,
 				8C4395E829C947A800E68B31 /* Extensions.swift in Sources */,
 				FE7959A929C8A7DF0088B829 /* AppDelegate.swift in Sources */,
 				FE7959AB29C8A7DF0088B829 /* SceneDelegate.swift in Sources */,
 				8CA9F4C029CC041200627606 /* ProductService.swift in Sources */,
+				8C3F765C29CD5A1600D3D1AD /* SearchCell.swift in Sources */,
 				8C4395ED29C95CCB00E68B31 /* Product.swift in Sources */,
 				8C4395E429C940C400E68B31 /* LiveController.swift in Sources */,
 				8CA9F4BC29CBE2C400627606 /* Constant.swift in Sources */,
 				8C4395DE29C9409B00E68B31 /* ProductController.swift in Sources */,
 				8CA9F4BE29CBE37800627606 /* UserService.swift in Sources */,
+				8C3F765229CD576800D3D1AD /* SearchController.swift in Sources */,
 				8C4395EF29C9664600E68B31 /* AttributedStrings.swift in Sources */,
 				8C4395EB29C95C0600E68B31 /* ProductCell.swift in Sources */,
 				8CA9F4B929CBDF1200627606 /* LoginController.swift in Sources */,
+				8C3F765E29CD5D9300D3D1AD /* SearchHeader.swift in Sources */,
 				8C4395E029C940AE00E68B31 /* CommunityController.swift in Sources */,
 				8C4395E229C940BB00E68B31 /* ChatController.swift in Sources */,
 				8CA9F4C229CC409800627606 /* User.swift in Sources */,

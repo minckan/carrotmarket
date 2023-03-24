@@ -10,7 +10,7 @@ import Foundation
 struct Product {
     let user: User
     let id: String
-    var productImagUrl: URL?
+    var productImageUrl: URL?
     let name: String
     let price: Int
     let likes: Int
@@ -22,10 +22,10 @@ struct Product {
         self.price = dictionary["price"] as? Int ?? 0
         self.likes = dictionary["likes"] as? Int ?? 0
         
-        if let productImageString = dictionary["productImageUrl"] as? String {
+        if let productImageString = dictionary["productImage"] as? String {
             guard let url = URL(string: productImageString) else {return}
             
-            self.productImagUrl = url
+            self.productImageUrl = url
         }
         
     }

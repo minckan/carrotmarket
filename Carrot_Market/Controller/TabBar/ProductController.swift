@@ -15,7 +15,6 @@ class ProductController: UICollectionViewController {
     
     var products = [Product]() {
         didSet {
-
             collectionView.reloadData()
         }
     }
@@ -24,6 +23,7 @@ class ProductController: UICollectionViewController {
         let button = UIButton()
         let barItem = UIBarButtonItem(customView: button)
         button.setImage(UIImage(named: "search"), for: .normal)
+        button.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
         return barItem
     }()
     
@@ -31,13 +31,15 @@ class ProductController: UICollectionViewController {
         let button = UIButton()
         let barItem = UIBarButtonItem(customView: button)
         button.setImage(UIImage(named: "menu"), for: .normal)
+        button.addTarget(self, action: #selector(handleMenuhButtonTapped), for: .touchUpInside)
         return barItem
     }()
     
     private lazy var headerNotificationButton: UIBarButtonItem = {
         let button = UIButton()
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "setting"), for: .normal)
+        button.setImage(UIImage(named: "notification"), for: .normal)
+        button.addTarget(self, action: #selector(handleNotificationButtonTapped), for: .touchUpInside)
         return barItem
     }()
     
@@ -51,7 +53,18 @@ class ProductController: UICollectionViewController {
 
     
     // MARK: - Selectors
+    @objc func handleSearchButtonTapped() {
+        let controller = SearchController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
     
+    @objc func handleMenuhButtonTapped() {
+        
+    }
+    
+    @objc func handleNotificationButtonTapped() {
+        
+    }
     // MARK: - API
     func fetchProduct() {
         ProductService.shared.fetchProduct { products in

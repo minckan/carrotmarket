@@ -80,15 +80,14 @@ class ProductCell: UICollectionViewCell {
     // MARK: - Helpers
     func configure() {
         guard let product = product else {return}
-        
         let viewModel = ProductViewModel(product: product)
        
         productNameLabel.text = product.name
         productPriceLabel.text = viewModel.priceText
         
-        productImageView.sd_setImage(with: product.productImagUrl)
-        
-        print("DEBUG: profile image url is \(product)")
+        guard let productImage = product.productImageUrl else {return}
+        productImageView.sd_setImage(with: productImage)
+
         
         let title = NSAttributedString(string: String(product.likes), attributes: [.font: UIFont.systemFont(ofSize: 14)])
         likesButton.setAttributedTitle(title, for: .normal)
