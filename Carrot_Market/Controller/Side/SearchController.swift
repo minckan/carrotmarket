@@ -11,20 +11,16 @@ private let headerIdentifier = "SearchHeader"
 private let reuseIdentifier = "SearchCell"
 
 
+
+
 class SearchController : UICollectionViewController {
     // MARK: - Properties
     
-    private lazy var backButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.setTitleColor(.darkGray, for: .normal)
-        button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
-        return button
-    }()
-    
+    let commonNav = CommonNavigation()
+
     private let searchBar : UISearchBar = {
         let searchbar = UISearchBar()
-        searchbar.placeholder = "상현동 근처에서 검색"
+        searchbar.placeholder = "상현동 근처에서 검색?"
         return searchbar
     }()
     
@@ -45,10 +41,7 @@ class SearchController : UICollectionViewController {
     }
     
     // MARK: - Selectors
-    @objc func handleDismissal() {
-        navigationController?.popViewController(animated: true)
-    }
-    
+
     // MARK: - API
     
     // MARK: - Helpers
@@ -62,7 +55,8 @@ class SearchController : UICollectionViewController {
     
     func configureNavBar() {
         searchBar.delegate = self
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        commonNav.delegate = self
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: commonNav.backButton)
         navigationItem.titleView = searchBar
     }
 }
@@ -93,7 +87,7 @@ extension SearchController {
 
 extension SearchController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 150)
+        return CGSize(width: view.frame.width, height: 100)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 100)
@@ -105,5 +99,11 @@ extension SearchController : UICollectionViewDelegateFlowLayout {
 extension SearchController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print("DEBUG: \(searchText)")
+    }
+}
+
+extension SearchController: CommonNavigationDelegate {
+    var controller: UIViewController {
+        return self
     }
 }

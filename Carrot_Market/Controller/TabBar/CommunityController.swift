@@ -11,11 +11,13 @@ class CommunityController: UIViewController {
 
 
     // MARK: - Properties
-    
+    let commonNav = CommonNavigation()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        congigureNavBar()
     }
     
     // MARK: - Selectors
@@ -26,5 +28,16 @@ class CommunityController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "동네생활"
+    }
+    
+    func congigureNavBar() {
+        commonNav.delegate = self
+        navigationItem.rightBarButtonItems = [commonNav.notificationButton, commonNav.profileButton, commonNav.searchButton]
+    }
+}
+
+extension CommunityController: CommonNavigationDelegate {
+    var controller: UIViewController {
+       return self
     }
 }

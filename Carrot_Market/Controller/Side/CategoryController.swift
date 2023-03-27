@@ -11,11 +11,13 @@ class CategoryController: UIViewController {
     
     
     // MARK: - Properties
+    let commonNav = CommonNavigation()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureNavBar()
     }
     
     // MARK: - Selectors
@@ -26,5 +28,15 @@ class CategoryController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "중고거래 카테고리"
+    }
+    func configureNavBar() {
+        commonNav.delegate = self
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: commonNav.backButton)
+    }
+}
+
+extension CategoryController : CommonNavigationDelegate {
+    var controller: UIViewController {
+        return self
     }
 }

@@ -44,15 +44,15 @@ class MainTabController : UITabBarController{
     // MARK: - API
     func authenticateUserAndConfigureUI() {
         if Auth.auth().currentUser == nil {
-            DispatchQueue.main.async {
-                let nav = UINavigationController(rootViewController: LoginController())
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true)
+                DispatchQueue.main.async {
+                    let nav = UINavigationController(rootViewController: LoginController())
+                    nav.modalPresentationStyle = .fullScreen
+                    self.present(nav, animated: true)
+                }
+            } else {
+                configureUI()
+                configureTabBarUI()
             }
-        } else {
-            configureUI()
-            configureTabBarUI()
-        }
     }
     
     // MARK: - Helpers
@@ -72,10 +72,15 @@ class MainTabController : UITabBarController{
     }
     
     func configureTabBarUI() {
+        delegate = self
+
+        
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         
+//        let product = ProductController(collectionViewLayout: layout)
         let product = ProductController(collectionViewLayout: layout)
+        
         let nav1 = templateNavigationController(image: UIImage(named: "home"), title: "홈", rootViewController: product)
         
         let community = CommunityController()
@@ -91,7 +96,7 @@ class MainTabController : UITabBarController{
         let nav5 = templateNavigationController(image: UIImage(named: "user"), title: "나의 당근", rootViewController: mypage)
         
         viewControllers = [nav1, nav2, nav3, nav4, nav5]
-        
+  
         UITabBar.appearance().tintColor = UIColor.carrotOrange500
      
     }
@@ -100,9 +105,55 @@ class MainTabController : UITabBarController{
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = image
         nav.tabBarItem.title = title
-        
+       
         setNavigationBarColor(.white)
-
         return nav
+    }
+}
+
+extension MainTabController: UITabBarControllerDelegate {
+
+    /*
+     Called to allow the delegate to return a UIViewControllerAnimatedTransitioning delegate object for use during a noninteractive tab bar view controller transition.
+     ref: https://developer.apple.com/documentation/uikit/uitabbarcontrollerdelegate/1621167-tabbarcontroller
+     */
+    func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return TabBarAnimatedTransitioning()
+    }
+
+}
+
+final class TabBarAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
+    let duration = 0.5
+    
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return duration
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        
+        guard let fromView = transitionContext.view(forKey: .from),
+              let toView = transitionContext.view(forKey: .to) else {
+            transitionContext.completeTransition(false)
+            return
+        }
+        
+        // toView 먼저 containerView에 추가하고 alpha 값 조절
+        toView.alpha = 0.0
+        containerView.addSubview(toView)
+        
+        // fade-in 효과
+        UIView.animate(withDuration: duration / 2, animations: {
+            toView.alpha = 1.0
+        }) { _ in
+            // fade-in 완료 후 fade-out 효과 적용
+            UIView.animate(withDuration: self.duration / 2, animations: {
+                fromView.alpha = 0.0
+            }, completion: { _ in
+                fromView.removeFromSuperview()
+                transitionContext.completeTransition(true)
+            })
+        }
     }
 }

@@ -19,52 +19,26 @@ class ProductController: UICollectionViewController {
         }
     }
     
-    private lazy var headerSearchButton: UIBarButtonItem = {
-        let button = UIButton()
-        let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "search"), for: .normal)
-        button.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
-        return barItem
-    }()
-    
-    private lazy var headerMenuButton: UIBarButtonItem = {
-        let button = UIButton()
-        let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "menu"), for: .normal)
-        button.addTarget(self, action: #selector(handleMenuhButtonTapped), for: .touchUpInside)
-        return barItem
-    }()
-    
-    private lazy var headerNotificationButton: UIBarButtonItem = {
-        let button = UIButton()
-        let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "notification"), for: .normal)
-        button.addTarget(self, action: #selector(handleNotificationButtonTapped), for: .touchUpInside)
-        return barItem
-    }()
+    let commonNav = CommonNavigation()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         fetchProduct()
-       
+    
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+      
+        commonNav.delegate = self
+        configureNavBar()
     }
 
     
     // MARK: - Selectors
-    @objc func handleSearchButtonTapped() {
-        let controller = SearchController()
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    @objc func handleMenuhButtonTapped() {
-        
-    }
-    
-    @objc func handleNotificationButtonTapped() {
-        
-    }
+
     // MARK: - API
     func fetchProduct() {
         ProductService.shared.fetchProduct { products in
@@ -78,13 +52,11 @@ class ProductController: UICollectionViewController {
         
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.backgroundColor = .white
-        configureNavBar()
     }
     
     func configureNavBar() {
         navigationController?.navigationBar.isTranslucent = false
-        navigationItem.rightBarButtonItems = [headerNotificationButton, headerMenuButton, headerSearchButton]
-        
+        navigationItem.rightBarButtonItems = [commonNav.notificationButton, commonNav.menuButton, commonNav.searchButton]
     }
 }
 
@@ -109,5 +81,12 @@ extension ProductController {
 extension ProductController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 120)
+    }
+}
+
+
+extension ProductController: CommonNavigationDelegate {
+    var controller: UIViewController {
+        return self
     }
 }
