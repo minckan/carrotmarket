@@ -34,6 +34,7 @@
 		8CA9F4C229CC409800627606 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4C129CC409800627606 /* User.swift */; };
 		8CA9F4C529CC48A500627606 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 8CA9F4C429CC48A500627606 /* SDWebImage */; };
 		8CA9F4C729CC4E6D00627606 /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4C629CC4E6D00627606 /* ProductViewModel.swift */; };
+		8CAA768E29D275FB002FB38F /* ShadowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA768D29D275FB002FB38F /* ShadowButton.swift */; };
 		8CD2037329CAE3280059CCF9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CD2037229CAE3280059CCF9 /* GoogleService-Info.plist */; };
 		8CD2037629CAE4410059CCF9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8CD2037529CAE4410059CCF9 /* FirebaseAnalytics */; };
 		8CD2037829CAE4410059CCF9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8CD2037729CAE4410059CCF9 /* FirebaseAuth */; };
@@ -74,6 +75,7 @@
 		8CA9F4BF29CC041200627606 /* ProductService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductService.swift; sourceTree = "<group>"; };
 		8CA9F4C129CC409800627606 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8CA9F4C629CC4E6D00627606 /* ProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
+		8CAA768D29D275FB002FB38F /* ShadowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowButton.swift; sourceTree = "<group>"; };
 		8CD2037229CAE3280059CCF9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FE7959A529C8A7DF0088B829 /* Carrot_Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carrot_Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE7959A829C8A7DF0088B829 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				8C4936E429D158DD00BA2852 /* NavigationBar.swift */,
+				8CAA768D29D275FB002FB38F /* ShadowButton.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -338,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C3F765629CD581F00D3D1AD /* NotificationController.swift in Sources */,
+				8CAA768E29D275FB002FB38F /* ShadowButton.swift in Sources */,
 				8C4395E629C940E300E68B31 /* MyPageController.swift in Sources */,
 				8C4395DC29C9382400E68B31 /* MainTabContoller.swift in Sources */,
 				8C4395F329C9789300E68B31 /* UploadController.swift in Sources */,

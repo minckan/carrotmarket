@@ -11,17 +11,10 @@ import FirebaseAuth
 class MainTabController : UITabBarController{
     // MARK: - Properties
     
-    let actionButton: UIButton = {
-       let button = UIButton()
-        button.setBackgroundColor(.carrotOrange400, for: .normal)
-        button.setBackgroundColor(.carrotOrange500, for: .highlighted)
     
-        button.tintColor = .white
-        button.setImage(UIImage(named: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
-        button.setImage(UIImage(named: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .highlighted)
-        
+    let actionButton: ShadowButton = {
+        let button = ShadowButton(type: .system)
         button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
-        
         return button
     }()
     
@@ -61,14 +54,9 @@ class MainTabController : UITabBarController{
         
         view.addSubview(actionButton)
         actionButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
-        actionButton.layer.cornerRadius = 56 / 2 //  UIView의 모서리를 둥글게 처리
-        actionButton.layer.masksToBounds = true // 둥근 모서리를 뷰의 경계선 안에 맞춤
-        
-        // 그림자 효과 설정 (안됨❌)
-//        actionButton.layer.shadowColor = UIColor.gray.cgColor
-//        actionButton.layer.shadowOffset = CGSize(width: 0, height: 3)
-//        actionButton.layer.shadowOpacity = 0.5
-//        actionButton.layer.shadowRadius = 4
+//        actionButton.layer.cornerRadius = 56 / 2 //  UIView의 모서리를 둥글게 처리
+//        actionButton.layer.masksToBounds = true // 둥근 모서리를 뷰의 경계선 안에 맞춤
+    
     }
     
     func configureTabBarUI() {
