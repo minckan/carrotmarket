@@ -26,6 +26,7 @@
 		8C4395F329C9789300E68B31 /* UploadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4395F229C9789300E68B31 /* UploadController.swift */; };
 		8C4395F529C980C000E68B31 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4395F429C980C000E68B31 /* Utilities.swift */; };
 		8C4936E529D158DD00BA2852 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4936E429D158DD00BA2852 /* NavigationBar.swift */; };
+		8C5233A129D53F10007B2F1D /* ProductDetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */; };
 		8CA9F4B929CBDF1200627606 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4B729CBDF1200627606 /* LoginController.swift */; };
 		8CA9F4BA29CBDF1200627606 /* RegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4B829CBDF1200627606 /* RegistrationController.swift */; };
 		8CA9F4BC29CBE2C400627606 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4BB29CBE2C400627606 /* Constant.swift */; };
@@ -35,6 +36,7 @@
 		8CA9F4C529CC48A500627606 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 8CA9F4C429CC48A500627606 /* SDWebImage */; };
 		8CA9F4C729CC4E6D00627606 /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4C629CC4E6D00627606 /* ProductViewModel.swift */; };
 		8CAA768E29D275FB002FB38F /* ShadowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA768D29D275FB002FB38F /* ShadowButton.swift */; };
+		8CAA769129D27C18002FB38F /* ProductDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA769029D27C18002FB38F /* ProductDetailController.swift */; };
 		8CD2037329CAE3280059CCF9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CD2037229CAE3280059CCF9 /* GoogleService-Info.plist */; };
 		8CD2037629CAE4410059CCF9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8CD2037529CAE4410059CCF9 /* FirebaseAnalytics */; };
 		8CD2037829CAE4410059CCF9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8CD2037729CAE4410059CCF9 /* FirebaseAuth */; };
@@ -68,6 +70,7 @@
 		8C4395F229C9789300E68B31 /* UploadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadController.swift; sourceTree = "<group>"; };
 		8C4395F429C980C000E68B31 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		8C4936E429D158DD00BA2852 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
+		8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailHeader.swift; sourceTree = "<group>"; };
 		8CA9F4B729CBDF1200627606 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8CA9F4B829CBDF1200627606 /* RegistrationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationController.swift; sourceTree = "<group>"; };
 		8CA9F4BB29CBE2C400627606 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -76,6 +79,7 @@
 		8CA9F4C129CC409800627606 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8CA9F4C629CC4E6D00627606 /* ProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
 		8CAA768D29D275FB002FB38F /* ShadowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowButton.swift; sourceTree = "<group>"; };
+		8CAA769029D27C18002FB38F /* ProductDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailController.swift; sourceTree = "<group>"; };
 		8CD2037229CAE3280059CCF9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FE7959A529C8A7DF0088B829 /* Carrot_Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carrot_Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE7959A829C8A7DF0088B829 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,11 +110,11 @@
 		8C3F765729CD587D00D3D1AD /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
+				8CAA768F29D27C02002FB38F /* Product */,
 				8C4395E529C940E300E68B31 /* MyPageController.swift */,
 				8C4395E129C940BB00E68B31 /* ChatController.swift */,
 				8C4395E329C940C400E68B31 /* LiveController.swift */,
 				8C4395DF29C940AE00E68B31 /* CommunityController.swift */,
-				8C4395DD29C9409B00E68B31 /* ProductController.swift */,
 			);
 			path = TabBar;
 			sourceTree = "<group>";
@@ -138,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				8C4395EA29C95C0600E68B31 /* ProductCell.swift */,
+				8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -218,6 +223,15 @@
 				8CAA768D29D275FB002FB38F /* ShadowButton.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		8CAA768F29D27C02002FB38F /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				8C4395DD29C9409B00E68B31 /* ProductController.swift */,
+				8CAA769029D27C18002FB38F /* ProductDetailController.swift */,
+			);
+			path = Product;
 			sourceTree = "<group>";
 		};
 		FE79599C29C8A7DF0088B829 = {
@@ -345,6 +359,7 @@
 				8C4395E629C940E300E68B31 /* MyPageController.swift in Sources */,
 				8C4395DC29C9382400E68B31 /* MainTabContoller.swift in Sources */,
 				8C4395F329C9789300E68B31 /* UploadController.swift in Sources */,
+				8C5233A129D53F10007B2F1D /* ProductDetailHeader.swift in Sources */,
 				8C4395F529C980C000E68B31 /* Utilities.swift in Sources */,
 				8CA9F4BA29CBDF1200627606 /* RegistrationController.swift in Sources */,
 				8C3F765429CD57D500D3D1AD /* CategoryController.swift in Sources */,
@@ -368,6 +383,7 @@
 				8C3F765E29CD5D9300D3D1AD /* SearchHeader.swift in Sources */,
 				8C4395E029C940AE00E68B31 /* CommunityController.swift in Sources */,
 				8C4395E229C940BB00E68B31 /* ChatController.swift in Sources */,
+				8CAA769129D27C18002FB38F /* ProductDetailController.swift in Sources */,
 				8CA9F4C229CC409800627606 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

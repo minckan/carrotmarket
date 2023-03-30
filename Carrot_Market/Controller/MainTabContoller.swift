@@ -54,8 +54,6 @@ class MainTabController : UITabBarController{
         
         view.addSubview(actionButton)
         actionButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
-//        actionButton.layer.cornerRadius = 56 / 2 //  UIView의 모서리를 둥글게 처리
-//        actionButton.layer.masksToBounds = true // 둥근 모서리를 뷰의 경계선 안에 맞춤
     
     }
     

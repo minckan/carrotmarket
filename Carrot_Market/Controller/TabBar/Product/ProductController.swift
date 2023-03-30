@@ -71,8 +71,12 @@ extension ProductController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProductCell
         
         cell.product = products[indexPath.row]
-        
+
         return cell
+    }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = ProductDetailController()
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
