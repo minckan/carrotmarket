@@ -7,21 +7,22 @@
 
 import UIKit
 import SDWebImage
+import Hero
 
 private let reuseHeaderIdentifier = "ProductDetailHeader"
 
 class ProductDetailController : UIViewController {
     // MARK: - Properties
+    
+    private var product: Product
     let commonNav = CommonNavigation()
     
-    private lazy var imageViewTest : UIImageView = {
+    private lazy var productImageView : UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
-        iv.image = UIImage(named: "product_sample") // 기본 이미지 설정
-
-        iv.setDimensions(width: 100, height: 100)
-        iv.backgroundColor = .red
-            
+        iv.clipsToBounds = true // 이미지 뷰 바깥 부분은 자르기
+        iv.heightAnchor.constraint(equalToConstant: 400).isActive = true
+        
         return iv
     }()
     
@@ -29,43 +30,72 @@ class ProductDetailController : UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        commonNav.delegate = self
+        commonNav.mainColor = .white
+        
+      
         configureUI()
         configureNavBar()
+        
+
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // TODO: 네비게이션 바 컬러 변경하기
-        navigationController?.navigationBar.isHidden = true
+//        navigationController?.navigationBar.isHidden = true
+        
+        
+    }
+    
+
+    
+    init(product: Product) {
+        self.product = product
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Selectors
+
     
     // MARK: - API
     
     // MARK: - Helpers
     func configureUI() {
-        view.backgroundColor = .white
+
+        view.backgroundColor = .carrotOrange400
         
-        view.addSubview(imageViewTest)
-        imageViewTest.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0)
+        productImageView.sd_setImage(with: product.productImageUrl)
+        view.addSubview(productImageView)
+        productImageView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
 
     }
     func configureNavBar() {
-        commonNav.delegate = self
+        navigationItem.leftBarButtonItems = [commonNav.backButton]
         
-        let headerView = ProductDetailHeader()
-//        headerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 44) // 헤더 뷰의 위치 및 크기 설정
-        view.addSubview(headerView) // 커스텀 헤더를 뷰 계층 구조에 추가합니다.
-        headerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, width: view.frame.width, height: 100)
+//        let headerView = ProductDetailHeader()
+//        headerView.delegate = self
+//        view.addSubview(headerView) // 커스텀 헤더를 뷰 계층 구조에 추가합니다.
+//        headerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, width: view.frame.width, height: 50)
+
         
     }
 }
+
+extension ProductDetailController : ProductDetailHeaderDelegate {
+    func handleDismiss() {
+        self.dismiss(animated: true)
+    }
+}
+
 
 extension ProductDetailController: CommonNavigationDelegate {
     var controller: UIViewController {
-       return self
+        return self
     }
 }
-

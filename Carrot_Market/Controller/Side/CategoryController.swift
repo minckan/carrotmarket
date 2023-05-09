@@ -31,7 +31,7 @@ class CategoryController: UIViewController {
     }
     func configureNavBar() {
         commonNav.delegate = self
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: commonNav.backButton)
+        navigationItem.leftBarButtonItems = [commonNav.backButton]
     }
 }
 

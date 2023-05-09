@@ -7,9 +7,22 @@
 
 import UIKit
 
+protocol ProductDetailHeaderDelegate:AnyObject {
+    func handleDismiss()
+}
+
 class ProductDetailHeader : UIView {
     // MARK: - Properties
-    let commonNav = CommonNavigation()
+    weak var delegate:ProductDetailHeaderDelegate?
+    
+    lazy var backButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+        return button
+    }()
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -22,12 +35,16 @@ class ProductDetailHeader : UIView {
         fatalError("init(coder:) has not been implemented")
     }
     // MARK: - Selectors
-    
+    @objc func handleBackButton() {
+        delegate?.handleDismiss()
+    }
     // MARK: - API
     
     // MARK: - Helpers
     func configureUI() {
-        backgroundColor = UIColor.systemPink
+        addSubview(backButton)
+        backButton.centerY(inView: self)
+        backButton.anchor(left: leftAnchor, paddingLeft: 10)
     }
 }
 

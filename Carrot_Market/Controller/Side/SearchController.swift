@@ -56,7 +56,7 @@ class SearchController : UICollectionViewController {
     func configureNavBar() {
         searchBar.delegate = self
         commonNav.delegate = self
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: commonNav.backButton)
+        navigationItem.leftBarButtonItems = [commonNav.backButton]
         navigationItem.titleView = searchBar
     }
 }

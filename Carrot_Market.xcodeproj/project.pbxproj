@@ -37,6 +37,7 @@
 		8CA9F4C729CC4E6D00627606 /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4C629CC4E6D00627606 /* ProductViewModel.swift */; };
 		8CAA768E29D275FB002FB38F /* ShadowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA768D29D275FB002FB38F /* ShadowButton.swift */; };
 		8CAA769129D27C18002FB38F /* ProductDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA769029D27C18002FB38F /* ProductDetailController.swift */; };
+		8CAE67812A0A00E200A1F06E /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 8CAE67802A0A00E200A1F06E /* Hero */; };
 		8CD2037329CAE3280059CCF9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CD2037229CAE3280059CCF9 /* GoogleService-Info.plist */; };
 		8CD2037629CAE4410059CCF9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8CD2037529CAE4410059CCF9 /* FirebaseAnalytics */; };
 		8CD2037829CAE4410059CCF9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8CD2037729CAE4410059CCF9 /* FirebaseAuth */; };
@@ -100,6 +101,7 @@
 				8CD2037A29CAE4410059CCF9 /* FirebaseDatabase in Frameworks */,
 				8CD2037629CAE4410059CCF9 /* FirebaseAnalytics in Frameworks */,
 				8CD2037E29CAE4410059CCF9 /* FirebaseStorage in Frameworks */,
+				8CAE67812A0A00E200A1F06E /* Hero in Frameworks */,
 				8CD2037829CAE4410059CCF9 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +295,7 @@
 				8CD2037B29CAE4410059CCF9 /* FirebaseMessaging */,
 				8CD2037D29CAE4410059CCF9 /* FirebaseStorage */,
 				8CA9F4C429CC48A500627606 /* SDWebImage */,
+				8CAE67802A0A00E200A1F06E /* Hero */,
 			);
 			productName = Carrot_Market;
 			productReference = FE7959A529C8A7DF0088B829 /* Carrot_Market.app */;
@@ -325,6 +328,7 @@
 			packageReferences = (
 				8CD2037429CAE4410059CCF9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8CA9F4C329CC48A500627606 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				8CAE677F2A0A00E200A1F06E /* XCRemoteSwiftPackageReference "Hero" */,
 			);
 			productRefGroup = FE7959A629C8A7DF0088B829 /* Products */;
 			projectDirPath = "";
@@ -537,6 +541,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -566,6 +571,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -614,6 +620,14 @@
 				kind = branch;
 			};
 		};
+		8CAE677F2A0A00E200A1F06E /* XCRemoteSwiftPackageReference "Hero" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HeroTransitions/Hero.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 		8CD2037429CAE4410059CCF9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -629,6 +643,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8CA9F4C329CC48A500627606 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImage;
+		};
+		8CAE67802A0A00E200A1F06E /* Hero */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8CAE677F2A0A00E200A1F06E /* XCRemoteSwiftPackageReference "Hero" */;
+			productName = Hero;
 		};
 		8CD2037529CAE4410059CCF9 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

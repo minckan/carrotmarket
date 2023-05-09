@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Hero
 
 private let reuseIdentifier = "ProductCell"
 
@@ -36,7 +37,14 @@ class ProductController: UICollectionViewController {
         configureNavBar()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // TODO: 네비게이션 바 컬러 변경하기
+        navigationController?.navigationBar.isHidden = false
+    }
     
+
+
     // MARK: - Selectors
 
     // MARK: - API
@@ -71,12 +79,18 @@ extension ProductController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProductCell
         
         cell.product = products[indexPath.row]
-
         return cell
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let controller = ProductDetailController()
-        navigationController?.pushViewController(controller, animated: true)
+        let controller = ProductDetailController(product: products[indexPath.row])
+        let nav = UINavigationController(rootViewController: controller)
+//        navigationController?.pushViewController(controller, animated: true)
+        nav.modalPresentationStyle = .fullScreen
+        nav.hero.isEnabled = true
+        nav.hero.modalAnimationType = .selectBy(presenting: .push(direction: .left), dismissing: .pull(direction: .right))
+        
+        present(nav, animated: true)
+       
     }
 }
 

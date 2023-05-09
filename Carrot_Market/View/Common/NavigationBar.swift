@@ -12,14 +12,21 @@ protocol CommonNavigationDelegate : AnyObject {
 }
 
 class CommonNavigation {
-    static let shared = CommonNavigation()
-    
+ 
     weak var delegate: CommonNavigationDelegate?
+    
+    var mainColor:UIColor = .darkGray {
+        didSet {
+            configureUI()
+        }
+    }
+    
+    
     
     lazy var searchButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
         button.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
         return barItem
     }()
@@ -27,7 +34,7 @@ class CommonNavigation {
     lazy var menuButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "menu")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(named: "menu")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
         button.addTarget(self, action: #selector(handleMenuhButtonTapped), for: .touchUpInside)
         return barItem
     }()
@@ -35,26 +42,29 @@ class CommonNavigation {
     lazy var notificationButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "notification")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(named: "notification")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
         button.addTarget(self, action: #selector(handleNotificationButtonTapped), for: .touchUpInside)
         return barItem
     }()
     
-    lazy var backButton : UIButton = {
+    lazy var backButton : UIBarButtonItem = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        let barItem = UIBarButtonItem(customView: button)
+        button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
         button.setTitleColor(.darkGray, for: .normal)
         button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
-        return button
+        return barItem
     }()
     
     lazy var profileButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "happy")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(UIImage(named: "happy")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
         button.addTarget(self, action: #selector(handleProfileButtonTapped), for: .touchUpInside)
         return barItem
     }()
+    
+    //MARK: - Lifecycle
     
     // MARK: - Selectors
     @objc func handleSearchButtonTapped() {
@@ -86,6 +96,15 @@ class CommonNavigation {
     }
     
     // MARK: Helpers
+    func configureUI() {
+        if mainColor == .white {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithTransparentBackground()
+            delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
+            delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            
+        }
+    }
     func navigate(modalTo VC: UIViewController) {
         guard let viewController = delegate?.controller else {return}
 

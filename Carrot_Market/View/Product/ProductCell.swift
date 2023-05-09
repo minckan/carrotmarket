@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import Hero
 
 class ProductCell: UICollectionViewCell {
     // MARK: - Properties
@@ -19,7 +20,7 @@ class ProductCell: UICollectionViewCell {
     private lazy var productImageView : UIImageView = {
        let iv = UIImageView()
         iv.backgroundColor = .carrotOrange400
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleToFill
         iv.clipsToBounds = true
         iv.setDimensions(width: 90, height: 90)
         iv.layer.cornerRadius = 10
@@ -87,7 +88,7 @@ class ProductCell: UICollectionViewCell {
         
         guard let productImage = product.productImageUrl else {return}
         productImageView.sd_setImage(with: productImage)
-
+        productImageView.hero.id =  product.id
         
         let title = NSAttributedString(string: String(product.likes), attributes: [.font: UIFont.systemFont(ofSize: 14)])
         likesButton.setAttributedTitle(title, for: .normal)
