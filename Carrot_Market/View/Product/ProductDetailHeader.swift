@@ -42,6 +42,7 @@ class ProductDetailHeader : UIView {
     
     // MARK: - Helpers
     func configureUI() {
+
         addSubview(backButton)
         backButton.centerY(inView: self)
         backButton.anchor(left: leftAnchor, paddingLeft: 10)

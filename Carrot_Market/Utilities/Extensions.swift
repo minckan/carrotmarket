@@ -94,6 +94,7 @@ extension UIColor {
     static let carrotOrange500 = UIColor.rgb(red: 249, green: 115, blue: 22)
     static let carrotOrange400 = UIColor.rgb(red: 251, green: 146, blue: 60)
     static let lightBorder = UIColor.rgb(red: 229, green: 231, blue: 235)
+    static let gradeGreen = UIColor.rgb(red: 120, green: 200, blue: 129)
 }
 
 extension UIButton {
