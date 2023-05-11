@@ -102,6 +102,7 @@ class CommonNavigation {
             appearance.configureWithTransparentBackground()
             delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
             delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            delegate?.controller.edgesForExtendedLayout = UIRectEdge.top
         }
     }
     func navigate(modalTo VC: UIViewController) {

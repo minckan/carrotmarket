@@ -135,7 +135,6 @@ class ProductDetailController : UIViewController {
         super.viewDidLoad()
         commonNav.delegate = self
         commonNav.mainColor = .white
-        
       
         configureUI()
         configureNavBar()
@@ -197,39 +196,39 @@ class ProductDetailController : UIViewController {
     func configureUI() {
 
         view.backgroundColor = .white
-//        scrollView.translatesAutoresizingMaskIntoConstraints = false
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         
-//        view.addSubview(scrollView)
-//        scrollView.addSubview(contentView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
         
-//        // ScrollView
-//        NSLayoutConstraint.activate([
-//            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-//            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-//            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-//        ])
-//
-//        NSLayoutConstraint.activate([
-//            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-//            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-//            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-//            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
-//        ])
-//
-//        contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-//
-//        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor)
-//        contentViewHeight.priority = .defaultLow
-//        contentViewHeight.isActive = true
+        // ScrollView
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
+        ])
+        
+        contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        
+        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor)
+        contentViewHeight.priority = .defaultLow
+        contentViewHeight.isActive = true
 
         
         
         
         productImageView.sd_setImage(with: product.productImageUrl)
-        view.addSubview(productImageView)
+        contentView.addSubview(productImageView)
         productImageView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
         
         let userNameStack = UIStackView(arrangedSubviews: [usernameLabel, userLocationLabel])
@@ -255,22 +254,22 @@ class ProductDetailController : UIViewController {
         
         
         
-        view.addSubview(userInfoStack)
+        contentView.addSubview(userInfoStack)
         userInfoStack.backgroundColor = .white
         userInfoStack.anchor(top: productImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 80)
         
         let divider = UIView()
         divider.backgroundColor = .systemGroupedBackground
-        view.addSubview(divider)
+        contentView.addSubview(divider)
         divider.anchor(left: view.leftAnchor, bottom: userInfoStack.bottomAnchor, right: view.rightAnchor, paddingLeft: 15, paddingRight: 15, height: 1.0)
         
-        view.addSubview(statusChangeButton)
+        contentView.addSubview(statusChangeButton)
         statusChangeButton.anchor(top: userInfoStack.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 15)
         
-        view.addSubview(productNameLabel)
+        contentView.addSubview(productNameLabel)
         
         let productInfoStack = UIStackView(arrangedSubviews: [productCategoryLabel, productUpdatedCntLabel])
-        view.addSubview(productInfoStack)
+        contentView.addSubview(productInfoStack)
     
     }
     
