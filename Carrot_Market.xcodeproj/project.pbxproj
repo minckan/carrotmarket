@@ -27,6 +27,9 @@
 		8C4395F529C980C000E68B31 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4395F429C980C000E68B31 /* Utilities.swift */; };
 		8C4936E529D158DD00BA2852 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4936E429D158DD00BA2852 /* NavigationBar.swift */; };
 		8C5233A129D53F10007B2F1D /* ProductDetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */; };
+		8C8E5B722A0DD74200875C90 /* ProductDetailControllerWithStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8E5B712A0DD74200875C90 /* ProductDetailControllerWithStoryboard.swift */; };
+		8C8E5B742A0E152900875C90 /* ProductDetailFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8E5B732A0E152900875C90 /* ProductDetailFooter.swift */; };
+		8C8E5B772A0E34B400875C90 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C8E5B762A0E34B400875C90 /* SnapKit */; };
 		8CA9F4B929CBDF1200627606 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4B729CBDF1200627606 /* LoginController.swift */; };
 		8CA9F4BA29CBDF1200627606 /* RegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4B829CBDF1200627606 /* RegistrationController.swift */; };
 		8CA9F4BC29CBE2C400627606 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9F4BB29CBE2C400627606 /* Constant.swift */; };
@@ -72,6 +75,8 @@
 		8C4395F429C980C000E68B31 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		8C4936E429D158DD00BA2852 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailHeader.swift; sourceTree = "<group>"; };
+		8C8E5B712A0DD74200875C90 /* ProductDetailControllerWithStoryboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailControllerWithStoryboard.swift; sourceTree = "<group>"; };
+		8C8E5B732A0E152900875C90 /* ProductDetailFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailFooter.swift; sourceTree = "<group>"; };
 		8CA9F4B729CBDF1200627606 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8CA9F4B829CBDF1200627606 /* RegistrationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationController.swift; sourceTree = "<group>"; };
 		8CA9F4BB29CBE2C400627606 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -97,6 +102,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CA9F4C529CC48A500627606 /* SDWebImage in Frameworks */,
+				8C8E5B772A0E34B400875C90 /* SnapKit in Frameworks */,
 				8CD2037C29CAE4410059CCF9 /* FirebaseMessaging in Frameworks */,
 				8CD2037A29CAE4410059CCF9 /* FirebaseDatabase in Frameworks */,
 				8CD2037629CAE4410059CCF9 /* FirebaseAnalytics in Frameworks */,
@@ -145,6 +151,7 @@
 			children = (
 				8C4395EA29C95C0600E68B31 /* ProductCell.swift */,
 				8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */,
+				8C8E5B732A0E152900875C90 /* ProductDetailFooter.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -232,6 +239,7 @@
 			children = (
 				8C4395DD29C9409B00E68B31 /* ProductController.swift */,
 				8CAA769029D27C18002FB38F /* ProductDetailController.swift */,
+				8C8E5B712A0DD74200875C90 /* ProductDetailControllerWithStoryboard.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -296,6 +304,7 @@
 				8CD2037D29CAE4410059CCF9 /* FirebaseStorage */,
 				8CA9F4C429CC48A500627606 /* SDWebImage */,
 				8CAE67802A0A00E200A1F06E /* Hero */,
+				8C8E5B762A0E34B400875C90 /* SnapKit */,
 			);
 			productName = Carrot_Market;
 			productReference = FE7959A529C8A7DF0088B829 /* Carrot_Market.app */;
@@ -329,6 +338,7 @@
 				8CD2037429CAE4410059CCF9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8CA9F4C329CC48A500627606 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				8CAE677F2A0A00E200A1F06E /* XCRemoteSwiftPackageReference "Hero" */,
+				8C8E5B752A0E34B300875C90 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = FE7959A629C8A7DF0088B829 /* Products */;
 			projectDirPath = "";
@@ -361,6 +371,7 @@
 				8C3F765629CD581F00D3D1AD /* NotificationController.swift in Sources */,
 				8CAA768E29D275FB002FB38F /* ShadowButton.swift in Sources */,
 				8C4395E629C940E300E68B31 /* MyPageController.swift in Sources */,
+				8C8E5B722A0DD74200875C90 /* ProductDetailControllerWithStoryboard.swift in Sources */,
 				8C4395DC29C9382400E68B31 /* MainTabContoller.swift in Sources */,
 				8C4395F329C9789300E68B31 /* UploadController.swift in Sources */,
 				8C5233A129D53F10007B2F1D /* ProductDetailHeader.swift in Sources */,
@@ -381,6 +392,7 @@
 				8CA9F4BE29CBE37800627606 /* UserService.swift in Sources */,
 				8C3F765229CD576800D3D1AD /* SearchController.swift in Sources */,
 				8C4395EF29C9664600E68B31 /* AttributedStrings.swift in Sources */,
+				8C8E5B742A0E152900875C90 /* ProductDetailFooter.swift in Sources */,
 				8C4936E529D158DD00BA2852 /* NavigationBar.swift in Sources */,
 				8C4395EB29C95C0600E68B31 /* ProductCell.swift in Sources */,
 				8CA9F4B929CBDF1200627606 /* LoginController.swift in Sources */,
@@ -535,7 +547,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRP9DD5ZP3;
+				DEVELOPMENT_TEAM = 2F862T5BQ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Carrot_Market/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -565,7 +577,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRP9DD5ZP3;
+				DEVELOPMENT_TEAM = 2F862T5BQ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Carrot_Market/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -612,6 +624,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8C8E5B752A0E34B300875C90 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
 		8CA9F4C329CC48A500627606 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
@@ -639,6 +659,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8C8E5B762A0E34B400875C90 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C8E5B752A0E34B300875C90 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
 		8CA9F4C429CC48A500627606 /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8CA9F4C329CC48A500627606 /* XCRemoteSwiftPackageReference "SDWebImage" */;

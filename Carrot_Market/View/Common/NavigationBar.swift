@@ -7,6 +7,18 @@
 
 import UIKit
 
+enum UIType {
+    case white
+    case black
+    
+    var primaryColor : UIColor {
+        switch self {
+        case .white: return UIColor.white
+        case .black: return UIColor.darkGray
+        }
+    }
+}
+
 protocol CommonNavigationDelegate : AnyObject {
     var controller : UIViewController { get }
 }
@@ -15,7 +27,7 @@ class CommonNavigation {
  
     weak var delegate: CommonNavigationDelegate?
     
-    var mainColor:UIColor = .darkGray {
+    var type: UIType = .black {
         didSet {
             configureUI()
         }
@@ -26,7 +38,7 @@ class CommonNavigation {
     lazy var searchButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
+        button.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysOriginal).withTintColor(type.primaryColor), for: .normal)
         button.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
         return barItem
     }()
@@ -34,7 +46,7 @@ class CommonNavigation {
     lazy var menuButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "menu")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
+        button.setImage(UIImage(named: "menu")?.withRenderingMode(.alwaysOriginal).withTintColor(type.primaryColor), for: .normal)
         button.addTarget(self, action: #selector(handleMenuhButtonTapped), for: .touchUpInside)
         return barItem
     }()
@@ -42,7 +54,7 @@ class CommonNavigation {
     lazy var notificationButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "notification")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
+        button.setImage(UIImage(named: "notification")?.withRenderingMode(.alwaysOriginal).withTintColor(type.primaryColor), for: .normal)
         button.addTarget(self, action: #selector(handleNotificationButtonTapped), for: .touchUpInside)
         return barItem
     }()
@@ -50,7 +62,7 @@ class CommonNavigation {
     lazy var backButton : UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
+        button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysOriginal).withTintColor(type.primaryColor), for: .normal)
         button.setTitleColor(.darkGray, for: .normal)
         button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
         return barItem
@@ -59,7 +71,7 @@ class CommonNavigation {
     lazy var profileButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
-        button.setImage(UIImage(named: "happy")?.withRenderingMode(.alwaysOriginal).withTintColor(mainColor), for: .normal)
+        button.setImage(UIImage(named: "happy")?.withRenderingMode(.alwaysOriginal).withTintColor(type.primaryColor), for: .normal)
         button.addTarget(self, action: #selector(handleProfileButtonTapped), for: .touchUpInside)
         return barItem
     }()
@@ -97,13 +109,7 @@ class CommonNavigation {
     
     // MARK: Helpers
     func configureUI() {
-        if mainColor == .white {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithTransparentBackground()
-            delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
-            delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            delegate?.controller.edgesForExtendedLayout = UIRectEdge.top
-        }
+        updateNavigationUI(to: type)
     }
     func navigate(modalTo VC: UIViewController) {
         guard let viewController = delegate?.controller else {return}
@@ -120,6 +126,24 @@ class CommonNavigation {
         let controller = VC
         let navigationController = UINavigationController(rootViewController: controller)
         viewController.navigationController?.pushViewController(VC, animated: true)
+    }
+    
+    func updateNavigationUI(to type: UIType) {
+        switch type {
+        case .white:
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithTransparentBackground()
+            delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
+            delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            delegate?.controller.edgesForExtendedLayout = UIRectEdge.top
+        case .black:
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground() // 배경을 불투명하게 설정
+            appearance.backgroundColor = .white // 배경 색상을 화이트로 설정
+
+            delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
+            delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        }
     }
     
 }

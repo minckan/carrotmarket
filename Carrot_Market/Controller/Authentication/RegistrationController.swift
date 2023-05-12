@@ -116,6 +116,8 @@ class RegistrationController : UIViewController {
         
         let credential = AuthCredential(email: email, password: password, fullname: fullname, username: username, profileImage: profileImage)
         
+        
+        
         UserService.shared.registerUser(credential: credential) { error, ref in
             guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else {return}
             

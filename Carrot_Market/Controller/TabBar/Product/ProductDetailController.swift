@@ -8,6 +8,7 @@
 import UIKit
 import SDWebImage
 import Hero
+import SnapKit
 
 private let reuseHeaderIdentifier = "ProductDetailHeader"
 
@@ -15,6 +16,16 @@ class ProductDetailController : UIViewController {
     // MARK: - Properties
     let scrollView : UIScrollView! = UIScrollView()
     let contentView : UIView! = UIView()
+    
+    
+
+    let imageScrollView : UIScrollView = {
+       let sv = UIScrollView()
+        sv.isPagingEnabled = true
+        return sv
+    }()
+    
+    let pageControll = UIPageControl()
     
     private var product: Product
     let commonNav = CommonNavigation()
@@ -25,6 +36,8 @@ class ProductDetailController : UIViewController {
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true // 이미지 뷰 바깥 부분은 자르기
         iv.heightAnchor.constraint(equalToConstant: 400).isActive = true
+
+        
         
         return iv
     }()
@@ -130,11 +143,57 @@ class ProductDetailController : UIViewController {
         return label
     }()
     
+    private let captionLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.numberOfLines = 0
+        label.text = """
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        """
+        
+        label.setContentHuggingPriority(.required, for: .vertical)
+        return label
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         commonNav.delegate = self
-        commonNav.mainColor = .white
+        commonNav.type = .white
+        
+        self.automaticallyAdjustsScrollViewInsets = false
+        scrollView.delegate = self
+
       
         configureUI()
         configureNavBar()
@@ -200,23 +259,32 @@ class ProductDetailController : UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
+        
         
         
         // ScrollView
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        ])
         
-        NSLayoutConstraint.activate([
-            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
-        ])
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+//        NSLayoutConstraint.activate([
+//            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+//            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+//            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+//            // TODO: 푸터 크기 자동으로 계산해서 constant 줘야함.
+//            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -68),
+//        ])
+        
+//        NSLayoutConstraint.activate([
+//            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+//            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+//            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+//            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
+//        ])
+        
+        contentView.snp.makeConstraints { make in
+            make.top.equalTo(scrollView)
+        }
         
         contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         
@@ -224,12 +292,11 @@ class ProductDetailController : UIViewController {
         contentViewHeight.priority = .defaultLow
         contentViewHeight.isActive = true
 
-        
-        
-        
         productImageView.sd_setImage(with: product.productImageUrl)
+
         contentView.addSubview(productImageView)
-        productImageView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
+        productImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: -100)
+        
         
         let userNameStack = UIStackView(arrangedSubviews: [usernameLabel, userLocationLabel])
         userNameStack.axis = .vertical
@@ -256,34 +323,48 @@ class ProductDetailController : UIViewController {
         
         contentView.addSubview(userInfoStack)
         userInfoStack.backgroundColor = .white
-        userInfoStack.anchor(top: productImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 80)
+        userInfoStack.anchor(top: productImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 80)
         
         let divider = UIView()
         divider.backgroundColor = .systemGroupedBackground
         contentView.addSubview(divider)
-        divider.anchor(left: view.leftAnchor, bottom: userInfoStack.bottomAnchor, right: view.rightAnchor, paddingLeft: 15, paddingRight: 15, height: 1.0)
+        divider.anchor(left: contentView.leftAnchor, bottom: userInfoStack.bottomAnchor, right: contentView.rightAnchor, paddingLeft: 15, paddingRight: 15, height: 1.0)
         
         contentView.addSubview(statusChangeButton)
-        statusChangeButton.anchor(top: userInfoStack.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 15)
+        statusChangeButton.anchor(top: userInfoStack.bottomAnchor, left: contentView.leftAnchor, paddingTop: 30, paddingLeft: 15)
         
         contentView.addSubview(productNameLabel)
+        productNameLabel.anchor(top: statusChangeButton.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 15)
         
         let productInfoStack = UIStackView(arrangedSubviews: [productCategoryLabel, productUpdatedCntLabel])
         contentView.addSubview(productInfoStack)
-    
+        productInfoStack.anchor(top: productNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 15)
+        
+        contentView.addSubview(captionLabel)
+        captionLabel.anchor(top: productInfoStack.bottomAnchor, left: contentView.leftAnchor, paddingTop: 15, paddingLeft: 15)
+
+        
+        
+        
+        // Footer
+        let footer = ProductDetailFooter()
+        view.addSubview(footer)
+        footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
+        
+        
+        
+   
     }
     
     
     func configureNavBar() {
         navigationItem.leftBarButtonItems = [commonNav.backButton]
         
-//        let headerView = ProductDetailHeader()
-//        headerView.delegate = self
-//        view.addSubview(headerView) // 커스텀 헤더를 뷰 계층 구조에 추가합니다.
-//        headerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, width: view.frame.width, height: 50)
-
-        
     }
+    private func setPageControlSelectedPage(currentPage:Int) {
+          pageControll.currentPage = currentPage
+      }
+   
 }
 
 extension ProductDetailController : ProductDetailHeaderDelegate {
@@ -296,5 +377,12 @@ extension ProductDetailController : ProductDetailHeaderDelegate {
 extension ProductDetailController: CommonNavigationDelegate {
     var controller: UIViewController {
         return self
+    }
+}
+
+extension ProductDetailController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset.y
+        
     }
 }

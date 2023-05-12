@@ -95,6 +95,7 @@ class MainTabController : UITabBarController{
         setNavigationBarColor(.white)
         return nav
     }
+    
 }
 
 extension MainTabController: UITabBarControllerDelegate {
