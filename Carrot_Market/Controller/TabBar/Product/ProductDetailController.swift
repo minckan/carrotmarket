@@ -146,7 +146,7 @@ class ProductDetailController : UIViewController {
     private let captionLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.numberOfLines = 0
+        
         label.text = """
         이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
         이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
@@ -178,10 +178,12 @@ class ProductDetailController : UIViewController {
         이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
         이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
         이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
         """
+        label.numberOfLines = 0
+        label.sizeToFit()
+        label.lineBreakMode = .byWordWrapping
         
-        label.setContentHuggingPriority(.required, for: .vertical)
+        
         return label
     }()
     
@@ -191,7 +193,6 @@ class ProductDetailController : UIViewController {
         commonNav.delegate = self
         commonNav.type = .white
         
-        self.automaticallyAdjustsScrollViewInsets = false
         scrollView.delegate = self
 
       
@@ -206,9 +207,6 @@ class ProductDetailController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // TODO: 네비게이션 바 컬러 변경하기
-//        navigationController?.navigationBar.isHidden = true
-        
-        
     }
     
 
@@ -259,38 +257,13 @@ class ProductDetailController : UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(scrollView)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         
-        
-        
-        // ScrollView
-        
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
-        }
-//        NSLayoutConstraint.activate([
-//            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-//            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-//            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-//            // TODO: 푸터 크기 자동으로 계산해서 constant 줘야함.
-//            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -68),
-//        ])
-        
-//        NSLayoutConstraint.activate([
-//            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-//            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-//            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-//            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
-//        ])
-        
-        contentView.snp.makeConstraints { make in
-            make.top.equalTo(scrollView)
-        }
+        scrollView.addSubview(contentView)
+        contentView.anchor(top: scrollView.contentLayoutGuide.topAnchor, left: scrollView.contentLayoutGuide.leftAnchor, bottom: scrollView.contentLayoutGuide.bottomAnchor, right: scrollView.contentLayoutGuide.rightAnchor, paddingBottom: -100)
         
         contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         
-        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor)
-        contentViewHeight.priority = .defaultLow
-        contentViewHeight.isActive = true
 
         productImageView.sd_setImage(with: product.productImageUrl)
 
@@ -342,15 +315,22 @@ class ProductDetailController : UIViewController {
         
         contentView.addSubview(captionLabel)
         captionLabel.anchor(top: productInfoStack.bottomAnchor, left: contentView.leftAnchor, paddingTop: 15, paddingLeft: 15)
-
         
-        
+        captionLabel.frame =  CGRect(x: 0, y: 0, width: scrollView.frame.width, height: 0)
+        captionLabel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         
         // Footer
         let footer = ProductDetailFooter()
         view.addSubview(footer)
         footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
         
+        print(captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize))
+        
+        guard let height = captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height as? CGFloat else { return }
+        
+        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, constant: height)
+        contentViewHeight.priority = .defaultLow
+        contentViewHeight.isActive = true
         
         
    
@@ -382,7 +362,13 @@ extension ProductDetailController: CommonNavigationDelegate {
 
 extension ProductDetailController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset.y
-        
+        let offsetY = scrollView.contentOffset.y
+        if offsetY >= 250 {
+            print("DEBUG: updated to black")
+            commonNav.type = .black
+        } else {
+            print("DEBUG: updated to white")
+            commonNav.type = .white
+        }
     }
 }

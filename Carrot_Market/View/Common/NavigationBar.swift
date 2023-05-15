@@ -29,6 +29,7 @@ class CommonNavigation {
     
     var type: UIType = .black {
         didSet {
+            print("DEBUG: I WAS CALLED!!!!!!!")
             configureUI()
         }
     }
@@ -136,14 +137,29 @@ class CommonNavigation {
             delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
             delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
             delegate?.controller.edgesForExtendedLayout = UIRectEdge.top
+          
+            
+            delegate?.controller.navigationController?.navigationBar.tintColor = .white
+
+            delegate?.controller.navigationItem.scrollEdgeAppearance = appearance
+            delegate?.controller.navigationItem.standardAppearance = appearance
+            delegate?.controller.navigationItem.compactAppearance = appearance
+
         case .black:
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground() // 배경을 불투명하게 설정
             appearance.backgroundColor = .white // 배경 색상을 화이트로 설정
+            
+            delegate?.controller.navigationController?.navigationBar.tintColor = .label
+
 
             delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
             delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            delegate?.controller.navigationController?.navigationBar.compactAppearance = appearance
+            
         }
+        delegate?.controller.navigationController?.setNeedsStatusBarAppearanceUpdate()
+       
     }
     
 }
