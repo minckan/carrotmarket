@@ -32,8 +32,6 @@ class ProductController: UICollectionViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-      
-        commonNav.delegate = self
         configureNavBar()
     }
 
@@ -57,13 +55,12 @@ class ProductController: UICollectionViewController {
     // MARK: - Helpers
     func configureUI() {
         view.backgroundColor = .white
-        
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.backgroundColor = .white
     }
     
     func configureNavBar() {
-        navigationController?.navigationBar.isTranslucent = false
+        commonNav.delegate = self
         navigationItem.rightBarButtonItems = [commonNav.notificationButton, commonNav.menuButton, commonNav.searchButton]
     }
 }

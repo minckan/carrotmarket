@@ -257,7 +257,7 @@ class ProductDetailController : UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(scrollView)
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 66)
         
         scrollView.addSubview(contentView)
         contentView.anchor(top: scrollView.contentLayoutGuide.topAnchor, left: scrollView.contentLayoutGuide.leftAnchor, bottom: scrollView.contentLayoutGuide.bottomAnchor, right: scrollView.contentLayoutGuide.rightAnchor, paddingBottom: -100)
@@ -364,10 +364,8 @@ extension ProductDetailController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         if offsetY >= 250 {
-            print("DEBUG: updated to black")
             commonNav.type = .black
         } else {
-            print("DEBUG: updated to white")
             commonNav.type = .white
         }
     }

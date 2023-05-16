@@ -141,4 +141,9 @@ extension UITextView {
     }
 }
 
+extension UIBarButtonItem {
+    func setDefaultColor(_ color: UIColor) {
+        self.tintColor = color
+    }
+}
 
