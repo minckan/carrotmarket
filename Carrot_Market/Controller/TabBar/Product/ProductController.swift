@@ -37,8 +37,8 @@ class ProductController: UICollectionViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // TODO: 네비게이션 바 컬러 변경하기
-        navigationController?.navigationBar.isHidden = false
+//        // TODO: 네비게이션 바 컬러 변경하기
+//        navigationController?.navigationBar.isHidden = false
     }
     
 

@@ -25,6 +25,11 @@ protocol CommonNavigationDelegate : AnyObject {
     var controller : UIViewController { get }
 }
 
+protocol CommonNavigationButtonHandlerDelegate: AnyObject {
+    func handleActionSheet()
+    func handleShareButton()
+}
+
 class CommonNavigation {
  
     weak var delegate: CommonNavigationDelegate? {
@@ -32,6 +37,8 @@ class CommonNavigation {
             configureUI()
         }
     }
+    
+    weak var buttonHandelerDelegate : CommonNavigationButtonHandlerDelegate?
     
     var type: UIType = .black {
         didSet {
@@ -86,6 +93,34 @@ class CommonNavigation {
         return barItem
     }()
     
+    lazy var homeButton: UIBarButtonItem = {
+        let button = UIButton(type: .system)
+        let barItem = UIBarButtonItem(customView: button)
+        button.setImage(UIImage(named: "home"), for: .normal)
+
+        button.addTarget(self, action: #selector(handleHomeButtonTapped), for: .touchUpInside)
+        return barItem
+    }()
+    
+    
+    lazy var uploadButton: UIBarButtonItem = {
+        let button = UIButton(type: .system)
+        let barItem = UIBarButtonItem(customView: button)
+        button.setImage(UIImage(named: "icon_upload"), for: .normal)
+
+        button.addTarget(self, action: #selector(handleUploadButtonTapped), for: .touchUpInside)
+        return barItem
+    }()
+    
+    lazy var actionSheetButton: UIBarButtonItem = {
+        let button = UIButton(type: .system)
+        let barItem = UIBarButtonItem(customView: button)
+        button.setImage(UIImage(named: "vertical_dots"), for: .normal)
+
+        button.addTarget(self, action: #selector(handleActionSheetButtonTapped), for: .touchUpInside)
+        return barItem
+    }()
+    
     
     
     
@@ -105,6 +140,26 @@ class CommonNavigation {
     
     @objc func handleProfileButtonTapped() {
         navigate(modalTo: SearchController())
+    }
+    
+    @objc func handleHomeButtonTapped() {
+        // navigation controller depth가 있을 경우 rootview로 이동하기 위한 로직.
+        if let presentingVC = self.delegate?.controller.presentingViewController as? UINavigationController {
+            self.delegate?.controller.dismiss(animated: true) {
+                presentingVC.popToRootViewController(animated: true)
+            }
+        }
+        else {
+            self.delegate?.controller.dismiss(animated: true)
+        }
+    }
+    
+    @objc func handleUploadButtonTapped() {
+        self.buttonHandelerDelegate?.handleShareButton()
+    }
+    
+    @objc func handleActionSheetButtonTapped() {
+        buttonHandelerDelegate?.handleActionSheet()
     }
     
     @objc func handleDismissal() {
@@ -137,8 +192,10 @@ class CommonNavigation {
 
         let controller = VC
         let navigationController = UINavigationController(rootViewController: controller)
+        
         viewController.navigationController?.pushViewController(VC, animated: true)
     }
+    
     
     func updateNavigationUI(to type: UIType) {
         switch type {

@@ -9,6 +9,7 @@ import UIKit
 import SDWebImage
 import Hero
 import SnapKit
+import LinkPresentation
 
 private let reuseHeaderIdentifier = "ProductDetailHeader"
 
@@ -16,8 +17,15 @@ class ProductDetailController : UIViewController {
     // MARK: - Properties
     let scrollView : UIScrollView! = UIScrollView()
     let contentView : UIView! = UIView()
+    private var metaData: LPLinkMetadata = LPLinkMetadata() {
+        didSet {
+            DispatchQueue.main.async {
+                self.shareURLWithMetadata(metadata: self.metaData)
+            }
+        }
+    }
     
-    
+   
 
     let imageScrollView : UIScrollView = {
        let sv = UIScrollView()
@@ -191,22 +199,19 @@ class ProductDetailController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         commonNav.delegate = self
+        commonNav.buttonHandelerDelegate = self
         commonNav.type = .white
         
         scrollView.delegate = self
 
-      
         configureUI()
         configureNavBar()
-        configureScrollView()
-        
 
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // TODO: 네비게이션 바 컬러 변경하기
     }
     
 
@@ -230,34 +235,21 @@ class ProductDetailController : UIViewController {
     
     // MARK: - Selectors
     @objc func showActionSheet() {
-        let actionSheet = UIAlertController(title: nil, message: "상태변경", preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "판매중", style: .default, handler: {(ACTION:UIAlertAction) in
+        let actions = [UIAlertAction(title: "판매중", style: .default, handler: {(ACTION:UIAlertAction) in
             self.statusChangeButton.setTitle("판매중", for: .normal)
-        }))
-        actionSheet.addAction(UIAlertAction(title: "예약중", style: .default, handler: {(ACTION:UIAlertAction) in
+        }), UIAlertAction(title: "예약중", style: .default, handler: {(ACTION:UIAlertAction) in
             self.statusChangeButton.setTitle("예약중", for: .normal)
-        }))
-        actionSheet.addAction(UIAlertAction(title: "거래완료", style: .default, handler: {(ACTION:UIAlertAction) in
+        }), UIAlertAction(title: "거래완료", style: .default, handler: {(ACTION:UIAlertAction) in
             self.statusChangeButton.setTitle("거래완료", for: .normal)
-        }))
-        
-        
-        
-        //취소 버튼 - 스타일(cancel)
-        actionSheet.addAction(UIAlertAction(title: "닫기", style: .cancel, handler: nil))
-        
+        }), UIAlertAction(title: "닫기", style: .cancel, handler: nil)]
+    
+        let actionSheet = createActionSheet(title: nil, message: "상태변경", actions: actions)
         self.present(actionSheet, animated: true, completion: nil)
-        
-
     }
     
     // MARK: - API
     
     // MARK: - Helpers
-    func configureScrollView() {
-
-    }
     func configureUI() {
 
         view.backgroundColor = .white
@@ -346,12 +338,25 @@ class ProductDetailController : UIViewController {
     
     
     func configureNavBar() {
-        navigationItem.leftBarButtonItems = [commonNav.backButton]
-        
+        navigationItem.leftBarButtonItems = [commonNav.backButton, commonNav.homeButton]
+        navigationItem.rightBarButtonItems = [commonNav.actionSheetButton, commonNav.uploadButton]
     }
     private func setPageControlSelectedPage(currentPage:Int) {
           pageControll.currentPage = currentPage
       }
+    
+    func shareURLWithMetadata(metadata: LPLinkMetadata) {
+        let metadataItemSource = LinkPresentationItemSource(metadata: metadata)
+        
+        let activityVC = UIActivityViewController(activityItems: [metadataItemSource], applicationActivities: nil)
+        activityVC.popoverPresentationController?.sourceView = self.view
+
+        
+        
+        // 공유하기 기능 중 제외할 기능이 있을때 사용
+//        activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
+        self.present(activityVC, animated: true)
+    }
    
 }
 
@@ -366,6 +371,26 @@ extension ProductDetailController: CommonNavigationDelegate {
     var controller: UIViewController {
         return self
     }
+}
+
+extension ProductDetailController: CommonNavigationButtonHandlerDelegate {
+    func handleActionSheet() {
+        let actions = [UIAlertAction(title: "신고", style: .default, handler: {(ACTION:UIAlertAction) in
+            //
+        }), UIAlertAction(title: "이 사용자의 글 보지 않기", style: .default, handler: {(ACTION:UIAlertAction) in
+            //
+        }), UIAlertAction(title: "취소", style: .cancel, handler: nil)]
+    
+        let actionSheet = createActionSheet(title: nil, message: nil, actions: actions)
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func handleShareButton() {
+        self.metaData = getMetadataForSharingManually(title: "당근마켓에서 이 글을 확인해보세요!", url: nil, fileName: nil, fileType: nil)
+        shareURLWithMetadata(metadata: metaData)
+    }
+    
+
 }
 
 extension ProductDetailController: UIScrollViewDelegate {
