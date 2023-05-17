@@ -5,6 +5,8 @@
 //  Created by MZ01-MINCKAN on 2023/03/27.
 //
 
+
+// Navigation Style 관련 코드
 import UIKit
 
 enum UIType {
@@ -37,8 +39,8 @@ class CommonNavigation {
         }
     }
     
-    
-    
+    var isDarkContentBackground = false
+
     lazy var searchButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         let barItem = UIBarButtonItem(customView: button)
@@ -83,6 +85,7 @@ class CommonNavigation {
         button.addTarget(self, action: #selector(handleProfileButtonTapped), for: .touchUpInside)
         return barItem
     }()
+    
     
     
     
@@ -145,31 +148,47 @@ class CommonNavigation {
             delegate?.controller.navigationController?.navigationBar.standardAppearance = appearance
             delegate?.controller.navigationController?.navigationBar.scrollEdgeAppearance = appearance
             delegate?.controller.edgesForExtendedLayout = UIRectEdge.top
-            
             delegate?.controller.navigationController?.navigationBar.tintColor = .white
-
             delegate?.controller.navigationItem.scrollEdgeAppearance = appearance
             delegate?.controller.navigationItem.standardAppearance = appearance
             delegate?.controller.navigationItem.compactAppearance = appearance
-            
+            statusBarEnterDarkBackground()
             
         case .black:
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground() // 배경을 불투명하게 설정
             appearance.backgroundColor = .white // 배경 색상을 화이트로 설정
-            
             delegate?.controller.navigationController?.navigationBar.tintColor = .black
-
-
             delegate?.controller.navigationItem.standardAppearance = appearance
             delegate?.controller.navigationItem.scrollEdgeAppearance = appearance
             delegate?.controller.navigationItem.compactAppearance = appearance
+            statusBarEnterLightBackground()
             
         }
     
        
     }
     
-    
+    func statusBarEnterLightBackground() {
+        isDarkContentBackground = false
+        UIView.animate(withDuration: 0.3) {
+            self.delegate?.controller.setNeedsStatusBarAppearanceUpdate()
+        }
+        
+    }
+
+    func statusBarEnterDarkBackground() {
+        isDarkContentBackground = true
+        UIView.animate(withDuration: 0.3) {
+            self.delegate?.controller.setNeedsStatusBarAppearanceUpdate()
+        }
+    }
+
 }
 
+// view controller 가 네비게이션 안에 있을때는 단순히 preferredStatusBarStyle를 오버라이드 하는 것으로 status bar style이 변경되지 않음
+open class DynamicStatusBarNavigation: UINavigationController {
+    override open var childForStatusBarStyle: UIViewController? {
+        return topViewController
+    }
+}

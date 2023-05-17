@@ -80,7 +80,7 @@ extension ProductController {
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let controller = ProductDetailController(product: products[indexPath.row])
-        let nav = UINavigationController(rootViewController: controller)
+        let nav = DynamicStatusBarNavigation(rootViewController: controller)
 //        navigationController?.pushViewController(controller, animated: true)
         nav.modalPresentationStyle = .fullScreen
         nav.hero.isEnabled = true

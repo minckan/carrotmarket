@@ -24,7 +24,6 @@ class MainTabController : UITabBarController{
         authenticateUserAndConfigureUI()
     }
     
-
     
     // MARK: - Selectors
     @objc func actionButtonTapped() {
@@ -144,3 +143,4 @@ final class TabBarAnimatedTransitioning: NSObject, UIViewControllerAnimatedTrans
         }
     }
 }
+

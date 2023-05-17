@@ -220,6 +220,14 @@ class ProductDetailController : UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        if commonNav.isDarkContentBackground {
+            return .lightContent
+        } else {
+            return .darkContent
+        }
+    }
+    
     // MARK: - Selectors
     @objc func showActionSheet() {
         let actionSheet = UIAlertController(title: nil, message: "상태변경", preferredStyle: .actionSheet)
