@@ -49,3 +49,15 @@ func getMetadataForSharingManually(title: String, url: URL?, fileName: String?, 
     linkMetaData.title = title
     return linkMetaData
 }
+
+
+func resizeImage(image: UIImage, newWidth: CGFloat, newHeight: CGFloat) -> UIImage? {
+    let newSize = CGSize(width: newWidth, height: newHeight)
+    
+    UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+    image.draw(in: CGRect(origin: CGPoint.zero, size: newSize))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return newImage
+}

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C275ACD2A15F3890049C95A /* ProductDetailController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C275ACC2A15F3890049C95A /* ProductDetailController2.swift */; };
+		8C275ACF2A15F4770049C95A /* UserProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C275ACE2A15F4760049C95A /* UserProductCell.swift */; };
+		8C275AD12A1616C80049C95A /* PostDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C275AD02A1616C80049C95A /* PostDetailVC.swift */; };
 		8C3F765229CD576800D3D1AD /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765129CD576800D3D1AD /* SearchController.swift */; };
 		8C3F765429CD57D500D3D1AD /* CategoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765329CD57D500D3D1AD /* CategoryController.swift */; };
 		8C3F765629CD581F00D3D1AD /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3F765529CD581F00D3D1AD /* NotificationController.swift */; };
@@ -56,6 +59,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8C275ACC2A15F3890049C95A /* ProductDetailController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailController2.swift; sourceTree = "<group>"; };
+		8C275ACE2A15F4760049C95A /* UserProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProductCell.swift; sourceTree = "<group>"; };
+		8C275AD02A1616C80049C95A /* PostDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailVC.swift; sourceTree = "<group>"; };
 		8C3F765129CD576800D3D1AD /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		8C3F765329CD57D500D3D1AD /* CategoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryController.swift; sourceTree = "<group>"; };
 		8C3F765529CD581F00D3D1AD /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
@@ -154,6 +160,7 @@
 				8C4395EA29C95C0600E68B31 /* ProductCell.swift */,
 				8C5233A029D53F10007B2F1D /* ProductDetailHeader.swift */,
 				8C8E5B732A0E152900875C90 /* ProductDetailFooter.swift */,
+				8C275ACE2A15F4760049C95A /* UserProductCell.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -243,6 +250,8 @@
 				8C4395DD29C9409B00E68B31 /* ProductController.swift */,
 				8CAA769029D27C18002FB38F /* ProductDetailController.swift */,
 				8C8E5B712A0DD74200875C90 /* ProductDetailControllerWithStoryboard.swift */,
+				8C275ACC2A15F3890049C95A /* ProductDetailController2.swift */,
+				8C275AD02A1616C80049C95A /* PostDetailVC.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -383,6 +392,7 @@
 				8CA9F4BA29CBDF1200627606 /* RegistrationController.swift in Sources */,
 				8C3F765429CD57D500D3D1AD /* CategoryController.swift in Sources */,
 				8C4395F129C972C000E68B31 /* Common.swift in Sources */,
+				8C275ACF2A15F4770049C95A /* UserProductCell.swift in Sources */,
 				8CA9F4C729CC4E6D00627606 /* ProductViewModel.swift in Sources */,
 				8C4395E829C947A800E68B31 /* Extensions.swift in Sources */,
 				FE7959A929C8A7DF0088B829 /* AppDelegate.swift in Sources */,
@@ -392,6 +402,7 @@
 				8C4395ED29C95CCB00E68B31 /* Product.swift in Sources */,
 				8C4395E429C940C400E68B31 /* LiveController.swift in Sources */,
 				8CA9F4BC29CBE2C400627606 /* Constant.swift in Sources */,
+				8C275ACD2A15F3890049C95A /* ProductDetailController2.swift in Sources */,
 				8C4395DE29C9409B00E68B31 /* ProductController.swift in Sources */,
 				8CA9F4BE29CBE37800627606 /* UserService.swift in Sources */,
 				8C3F765229CD576800D3D1AD /* SearchController.swift in Sources */,
@@ -399,6 +410,7 @@
 				8C8E5B742A0E152900875C90 /* ProductDetailFooter.swift in Sources */,
 				8C4936E529D158DD00BA2852 /* NavigationBar.swift in Sources */,
 				8C4395EB29C95C0600E68B31 /* ProductCell.swift in Sources */,
+				8C275AD12A1616C80049C95A /* PostDetailVC.swift in Sources */,
 				8CA9F4B929CBDF1200627606 /* LoginController.swift in Sources */,
 				8C3F765E29CD5D9300D3D1AD /* SearchHeader.swift in Sources */,
 				8C4395E029C940AE00E68B31 /* CommunityController.swift in Sources */,

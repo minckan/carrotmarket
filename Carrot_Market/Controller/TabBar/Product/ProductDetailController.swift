@@ -10,10 +10,11 @@ import SDWebImage
 import Hero
 import SnapKit
 import LinkPresentation
+import MapKit
 
 private let reuseHeaderIdentifier = "ProductDetailHeader"
 
-class ProductDetailController : UIViewController {
+class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     // MARK: - Properties
     let scrollView : UIScrollView! = UIScrollView()
     let contentView : UIView! = UIView()
@@ -37,16 +38,15 @@ class ProductDetailController : UIViewController {
     
     private var product: Product
     let commonNav = CommonNavigation()
+    let locationManager = CLLocationManager()
     
     
     private lazy var productImageView : UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true // 이미지 뷰 바깥 부분은 자르기
         iv.heightAnchor.constraint(equalToConstant: 400).isActive = true
 
-        
-        
         return iv
     }()
     
@@ -156,41 +156,50 @@ class ProductDetailController : UIViewController {
         label.font = UIFont.systemFont(ofSize: 16)
         
         label.text = """
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아요
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
+                이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
+        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
+                이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진
         """
         label.numberOfLines = 0
         label.sizeToFit()
-        label.lineBreakMode = .byWordWrapping
+        label.lineBreakMode = .byCharWrapping
         
+        
+        return label
+    }()
+    
+    private let locationTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "거래 희망 장소"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        return label
+    }()
+    
+    private let locationButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("신미주 아파트", for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.titleLabel?.font = .systemFont(ofSize: 16)
+        button.contentHorizontalAlignment = .center
+        button.semanticContentAttribute = .forceRightToLeft
+        button.imageEdgeInsets = .init(top: 0, left: 15, bottom: 0, right: 15)
+        button.setImage(UIImage(named: "arrow_right"), for: .normal)
+        return button
+    }()
+    
+    
+    private let mapView: MKMapView = {
+       let mv = MKMapView()
+       
+        return mv
+    }()
+    
+    private let interestAndInquiryLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .lightGray
+        label.text = "관심 1﹒조회 46"
         
         return label
     }()
@@ -233,6 +242,7 @@ class ProductDetailController : UIViewController {
         }
     }
     
+    
     // MARK: - Selectors
     @objc func showActionSheet() {
         let actions = [UIAlertAction(title: "판매중", style: .default, handler: {(ACTION:UIAlertAction) in
@@ -260,7 +270,7 @@ class ProductDetailController : UIViewController {
         scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 66)
         
         scrollView.addSubview(contentView)
-        contentView.anchor(top: scrollView.contentLayoutGuide.topAnchor, left: scrollView.contentLayoutGuide.leftAnchor, bottom: scrollView.contentLayoutGuide.bottomAnchor, right: scrollView.contentLayoutGuide.rightAnchor, paddingBottom: -100)
+        contentView.anchor(top: scrollView.contentLayoutGuide.topAnchor, left: scrollView.contentLayoutGuide.leftAnchor, bottom: scrollView.contentLayoutGuide.bottomAnchor, right: scrollView.contentLayoutGuide.rightAnchor)
         
         contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         
@@ -314,7 +324,7 @@ class ProductDetailController : UIViewController {
         productInfoStack.anchor(top: productNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 15)
         
         contentView.addSubview(captionLabel)
-        captionLabel.anchor(top: productInfoStack.bottomAnchor, left: contentView.leftAnchor, paddingTop: 15, paddingLeft: 15)
+        captionLabel.anchor(top: productInfoStack.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor ,paddingTop: 15, paddingLeft: 15, paddingRight: 15)
         
         captionLabel.frame =  CGRect(x: 0, y: 0, width: scrollView.frame.width, height: 0)
         captionLabel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
@@ -323,12 +333,35 @@ class ProductDetailController : UIViewController {
         let footer = ProductDetailFooter()
         view.addSubview(footer)
         footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
+
+        let locationStack = UIStackView(arrangedSubviews: [locationTitleLabel, UIView(), locationButton])
+        locationStack.alignment = .fill
+        locationStack.distribution = .fill
         
-        print(captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize))
+        let spacerView = locationStack.arrangedSubviews[1]
+        spacerView.setContentHuggingPriority(.required, for: .horizontal)
+        spacerView.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        guard let height = captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height as? CGFloat else { return }
+        contentView.addSubview(locationStack)
+        locationStack.anchor(top: captionLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20,paddingLeft: 15, paddingRight: 15)
         
-        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, constant: height)
+        
+        contentView.addSubview(mapView)
+        mapView.anchor(top: locationStack.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingRight: 15, height: 200)
+        
+       
+        contentView.addSubview(interestAndInquiryLabel)
+        interestAndInquiryLabel.anchor(top: mapView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingRight: 15)
+        
+        
+        print("DEBUG: \(captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize))")
+        
+        guard let captionHeight = captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height as? CGFloat else { return }
+        
+        
+        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, constant: captionHeight + 200)
+        
+        
         contentViewHeight.priority = .defaultLow
         contentViewHeight.isActive = true
         
@@ -336,6 +369,15 @@ class ProductDetailController : UIViewController {
    
     }
     
+    func configureMap() {
+        mapView.delegate = self
+        locationManager.delegate = self
+        
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+        mapView.showsUserLocation = true
+    }
     
     func configureNavBar() {
         navigationItem.leftBarButtonItems = [commonNav.backButton, commonNav.homeButton]
@@ -358,12 +400,6 @@ class ProductDetailController : UIViewController {
         self.present(activityVC, animated: true)
     }
    
-}
-
-extension ProductDetailController : ProductDetailHeaderDelegate {
-    func handleDismiss() {
-        self.dismiss(animated: true)
-    }
 }
 
 
@@ -396,6 +432,7 @@ extension ProductDetailController: CommonNavigationButtonHandlerDelegate {
 extension ProductDetailController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
+    
         if offsetY >= 250 {
             commonNav.type = .black
         } else {
