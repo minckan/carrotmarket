@@ -13,9 +13,16 @@ import LinkPresentation
 import MapKit
 
 private let reuseHeaderIdentifier = "ProductDetailHeader"
+private let reuseIdentifier = "UserProductCell"
 
 class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     // MARK: - Properties
+    private var product: Product
+    private var previousStatusBarHidden = false
+    let locationManager = CLLocationManager()
+    let pageControll = UIPageControl()
+    let commonNav = CommonNavigation()
+    
     let scrollView : UIScrollView! = UIScrollView()
     let contentView : UIStackView! = UIStackView(arrangedSubviews: [])
     private var metaData: LPLinkMetadata = LPLinkMetadata() {
@@ -26,13 +33,20 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         }
     }
     
-   
+    let footer = ProductDetailFooter()
     
-    let pageControll = UIPageControl()
-    
-    private var product: Product
-    let commonNav = CommonNavigation()
-    let locationManager = CLLocationManager()
+    let collectionView : UICollectionView = {
+        let flowlayout = UICollectionViewFlowLayout()
+        flowlayout.scrollDirection = .vertical
+        flowlayout.minimumLineSpacing = 1
+        flowlayout.minimumInteritemSpacing = 1
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
+        cv.register(UserProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        cv.alwaysBounceVertical = true
+        
+        return cv
+    }()
     
     private let imageContainer = UIView()
     private lazy var productImageView : UIImageView = {
@@ -115,7 +129,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     
     private let productCategoryLabel: UILabel = {
         let label = UILabel()
-//        label.text = "가구/인테리아"
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .lightGray
         
@@ -193,9 +206,24 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         return label
     }()
     
-    private var previousStatusBarHidden = false
+
+    private let relatedProductLabel : UILabel = {
+        let label = UILabel()
+        label.text = "멋쟁이님의 판매 상품"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        return label
+    }()
+    let relatedProductButton:UIButton = {
+        let button = UIButton(type: .system)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.contentHorizontalAlignment = .center
+        button.setImage(UIImage(named: "arrow_right"), for: .normal)
+        return button
+    }()
     
-    let footer = ProductDetailFooter()
+    
+    
+   
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -233,6 +261,11 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         } else {
             return .darkContent
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.frame = view.bounds
     }
     
     
@@ -276,7 +309,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         contentView.snp.makeConstraints { make in
             make.top.equalTo(imageContainer.snp.bottom)
             make.left.right.equalTo(view).inset(15)
-            make.bottom.equalTo(scrollView)
+            make.bottom.equalTo(scrollView).inset(10)
         }
         
         scrollView.addSubview(productImageView)
@@ -392,6 +425,28 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         interestAndInquiryLabel.snp.makeConstraints { make in
             make.top.equalTo(mapView.snp.bottom).offset(20)
         }
+        
+        let relatedProductStack = UIStackView(arrangedSubviews: [relatedProductLabel, UIView(), relatedProductButton])
+        relatedProductStack.alignment = .fill
+        relatedProductStack.distribution = .fill
+        
+        contentView.addArrangedSubview(relatedProductStack)
+        relatedProductStack.snp.makeConstraints { make in
+            make.top.equalTo(interestAndInquiryLabel.snp.bottom).offset(20)
+        }
+        
+        
+        
+        scrollView.addSubview(collectionView)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(contentView.snp.bottom).offset(20)
+        }
+
+    }
+    
+    func configureCollectionView() {
 
     }
     
@@ -483,4 +538,23 @@ extension ProductDetailController: UIScrollViewDelegate {
         let frame = contentView.convert(contentView.bounds, to: nil)
         return frame.minY < view.safeAreaInsets.top
     }
+}
+
+extension ProductDetailController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        print("DEBUG: cellForItemAt called")
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! UserProductCell
+        cell.setDimensions(width: 100, height: 100)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("DEBUG: number called")
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 100)
+    }
+    
 }

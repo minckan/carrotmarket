@@ -47,6 +47,7 @@ class ProductCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
+
         
         addSubview(productImageView)
         productImageView.anchor(left: leftAnchor, paddingLeft: 20)

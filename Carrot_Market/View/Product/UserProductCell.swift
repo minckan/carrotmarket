@@ -11,8 +11,13 @@ class UserProductCell : UICollectionViewCell {
     // MARK: - Lifecycles
     override init(frame: CGRect) {
         super.init(frame: frame)
+     
+        let label = UILabel()
+        label.text = "HI!!"
+        addSubview(label)
+        print("DEBUG: HI?")
         
-        backgroundColor = .red
+        contentView.backgroundColor = .yellow
     }
     
     required init?(coder: NSCoder) {
