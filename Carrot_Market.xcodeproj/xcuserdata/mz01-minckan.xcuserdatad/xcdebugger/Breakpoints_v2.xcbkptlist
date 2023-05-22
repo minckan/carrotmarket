@@ -30,8 +30,8 @@
             filePath = "Carrot_Market/Controller/TabBar/Product/ProductDetailController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "438"
-            endingLineNumber = "438"
+            startingLineNumber = "465"
+            endingLineNumber = "465"
             landmarkName = "scrollViewDidScroll(_:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -79,10 +79,10 @@ extension ProductController {
         return cell
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let controller = ProductDetailController(product: products[indexPath.row])
+        let controller = ProductDetailController(product: products[indexPath.row])
 //        let controller = ProductDetailController2(product: products[indexPath.row])
-        let vc = MyHostingController(rootView: ProductDetailVC())
-        let nav = DynamicStatusBarNavigation(rootViewController: vc)
+//        let vc = MyHostingController(rootView: ProductDetailVC())
+        let nav = DynamicStatusBarNavigation(rootViewController: controller)
 //        navigationController?.pushViewController(controller, animated: true)
         nav.modalPresentationStyle = .fullScreen
         nav.hero.isEnabled = true

@@ -17,7 +17,7 @@ private let reuseHeaderIdentifier = "ProductDetailHeader"
 class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     // MARK: - Properties
     let scrollView : UIScrollView! = UIScrollView()
-    let contentView : UIView! = UIView()
+    let contentView : UIStackView! = UIStackView(arrangedSubviews: [])
     private var metaData: LPLinkMetadata = LPLinkMetadata() {
         didSet {
             DispatchQueue.main.async {
@@ -27,12 +27,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     }
     
    
-
-    let imageScrollView : UIScrollView = {
-       let sv = UIScrollView()
-        sv.isPagingEnabled = true
-        return sv
-    }()
     
     let pageControll = UIPageControl()
     
@@ -40,13 +34,11 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     let commonNav = CommonNavigation()
     let locationManager = CLLocationManager()
     
-    
+    private let imageContainer = UIView()
     private lazy var productImageView : UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        let iv =  UIImageView()
+        iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true // 이미지 뷰 바깥 부분은 자르기
-        iv.heightAnchor.constraint(equalToConstant: 400).isActive = true
-
         return iv
     }()
     
@@ -157,9 +149,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         
         label.text = """
         이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
-                이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
-                이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진
         """
         label.numberOfLines = 0
         label.sizeToFit()
@@ -204,6 +193,10 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         return label
     }()
     
+    private var previousStatusBarHidden = false
+    
+    let footer = ProductDetailFooter()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -222,7 +215,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-    
+
 
     
     init(product: Product) {
@@ -263,23 +256,53 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     func configureUI() {
 
         view.backgroundColor = .white
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(scrollView)
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 66)
+        view.addSubview(footer)
+        scrollView.contentInsetAdjustmentBehavior = .never
+   
         
-        scrollView.addSubview(contentView)
-        contentView.anchor(top: scrollView.contentLayoutGuide.topAnchor, left: scrollView.contentLayoutGuide.leftAnchor, bottom: scrollView.contentLayoutGuide.bottomAnchor, right: scrollView.contentLayoutGuide.rightAnchor)
+        imageContainer.backgroundColor = .darkGray
         
-        contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        
-
         productImageView.sd_setImage(with: product.productImageUrl)
-
-        contentView.addSubview(productImageView)
-        productImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: -100)
         
+
+        scrollView.addSubview(imageContainer)
+        scrollView.addSubview(contentView)
+        
+        contentView.distribution = .fill
+        contentView.spacing = 16
+        contentView.axis = .vertical
+        
+        contentView.snp.makeConstraints { make in
+            make.top.equalTo(imageContainer.snp.bottom)
+            make.left.right.equalTo(view).inset(15)
+            make.bottom.equalTo(scrollView)
+        }
+        
+        scrollView.addSubview(productImageView)
+       
+        footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(view)
+            make.left.right.equalTo(view)
+            make.bottom.equalTo(footer.snp.top)
+        }
+
+        imageContainer.snp.makeConstraints { make in
+            make.top.equalTo(scrollView)
+            make.left.equalTo(view)
+            make.right.equalTo(view)
+            make.height.equalTo(imageContainer.snp.width).multipliedBy(0.7)
+        }
+                
+        productImageView.snp.makeConstraints { make in
+            make.left.right.equalTo(imageContainer)
+            make.top.equalTo(view).priority(.high)
+            make.height.greaterThanOrEqualTo(imageContainer.snp.height).priority(.required)
+            make.bottom.equalTo(imageContainer.snp.bottom)
+        }
+
         
         let userNameStack = UIStackView(arrangedSubviews: [usernameLabel, userLocationLabel])
         userNameStack.axis = .vertical
@@ -299,40 +322,50 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         userInfoStack.axis = .horizontal
         userInfoStack.distribution = .equalSpacing
         userInfoStack.alignment = .center
-        userInfoStack.layoutMargins = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
-        userInfoStack.isLayoutMarginsRelativeArrangement = true
         
-        
-        
-        contentView.addSubview(userInfoStack)
+        contentView.addArrangedSubview(userInfoStack)
         userInfoStack.backgroundColor = .white
-        userInfoStack.anchor(top: productImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 80)
+        userInfoStack.snp.makeConstraints { make in
+            make.top.equalTo(contentView.snp.top)
+            make.height.equalTo(80)
+        }
         
         let divider = UIView()
         divider.backgroundColor = .systemGroupedBackground
-        contentView.addSubview(divider)
-        divider.anchor(left: contentView.leftAnchor, bottom: userInfoStack.bottomAnchor, right: contentView.rightAnchor, paddingLeft: 15, paddingRight: 15, height: 1.0)
+        contentView.addArrangedSubview(divider)
+        divider.snp.makeConstraints { make in
+            make.left.equalTo(contentView)
+            make.bottom.equalTo(userInfoStack)
+            make.right.equalTo(contentView)
+            make.height.equalTo(1.0)
+        }
         
-        contentView.addSubview(statusChangeButton)
-        statusChangeButton.anchor(top: userInfoStack.bottomAnchor, left: contentView.leftAnchor, paddingTop: 30, paddingLeft: 15)
+        contentView.addArrangedSubview(statusChangeButton)
+        statusChangeButton.snp.makeConstraints { make in
+            make.left.equalTo(contentView)
+            make.top.equalTo(userInfoStack.snp.bottom).offset(30)
+            make.width.equalTo(120)
+        }
         
-        contentView.addSubview(productNameLabel)
-        productNameLabel.anchor(top: statusChangeButton.bottomAnchor, left: contentView.leftAnchor, paddingTop: 20, paddingLeft: 15)
+        contentView.addArrangedSubview(productNameLabel)
+        productNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(statusChangeButton.snp.bottom).offset(20)
+        }
         
         let productInfoStack = UIStackView(arrangedSubviews: [productCategoryLabel, productUpdatedCntLabel])
-        contentView.addSubview(productInfoStack)
-        productInfoStack.anchor(top: productNameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 15)
+        contentView.addArrangedSubview(productInfoStack)
+        productInfoStack.snp.makeConstraints { make in
+            make.top.equalTo(productNameLabel.snp.bottom).offset(8)
+        }
         
-        contentView.addSubview(captionLabel)
-        captionLabel.anchor(top: productInfoStack.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor ,paddingTop: 15, paddingLeft: 15, paddingRight: 15)
+        contentView.addArrangedSubview(captionLabel)
+        captionLabel.snp.makeConstraints { make in
+            make.top.equalTo(productInfoStack.snp.bottom).offset(15)
+        }
         
         captionLabel.frame =  CGRect(x: 0, y: 0, width: scrollView.frame.width, height: 0)
         captionLabel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         
-        // Footer
-        let footer = ProductDetailFooter()
-        view.addSubview(footer)
-        footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
 
         let locationStack = UIStackView(arrangedSubviews: [locationTitleLabel, UIView(), locationButton])
         locationStack.alignment = .fill
@@ -342,31 +375,24 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         spacerView.setContentHuggingPriority(.required, for: .horizontal)
         spacerView.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        contentView.addSubview(locationStack)
-        locationStack.anchor(top: captionLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20,paddingLeft: 15, paddingRight: 15)
+        contentView.addArrangedSubview(locationStack)
+        locationStack.snp.makeConstraints { make in
+            make.top.equalTo(captionLabel.snp.bottom).offset(20)
+        }
         
         
-        contentView.addSubview(mapView)
-        mapView.anchor(top: locationStack.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingRight: 15, height: 200)
+        contentView.addArrangedSubview(mapView)
+        mapView.snp.makeConstraints { make in
+            make.top.equalTo(locationStack.snp.bottom).offset(20)
+            make.height.equalTo(200)
+        }
         
        
-        contentView.addSubview(interestAndInquiryLabel)
-        interestAndInquiryLabel.anchor(top: mapView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingRight: 15)
-        
-        
-        print("DEBUG: \(captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize))")
-        
-        guard let captionHeight = captionLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height as? CGFloat else { return }
-        
-        
-        let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, constant: captionHeight + 200)
-        
-        
-        contentViewHeight.priority = .defaultLow
-        contentViewHeight.isActive = true
-        
-        
-   
+        contentView.addArrangedSubview(interestAndInquiryLabel)
+        interestAndInquiryLabel.snp.makeConstraints { make in
+            make.top.equalTo(mapView.snp.bottom).offset(20)
+        }
+
     }
     
     func configureMap() {
@@ -432,11 +458,29 @@ extension ProductDetailController: CommonNavigationButtonHandlerDelegate {
 extension ProductDetailController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
+        
     
-        if offsetY >= 250 {
+        if offsetY >= 200 {
             commonNav.type = .black
         } else {
             commonNav.type = .white
         }
+        if previousStatusBarHidden != shouldHideStatusBar {
+            
+            UIView.animate(withDuration: 0.2, animations: {
+                self.setNeedsStatusBarAppearanceUpdate()
+            })
+            
+            previousStatusBarHidden = shouldHideStatusBar
+        }
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return shouldHideStatusBar
+    }
+    
+    private var shouldHideStatusBar : Bool {
+        let frame = contentView.convert(contentView.bounds, to: nil)
+        return frame.minY < view.safeAreaInsets.top
     }
 }
