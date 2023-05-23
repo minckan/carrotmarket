@@ -15,29 +15,52 @@ class UploadController: UIViewController {
     private let imagePicker = UIImagePickerController()
     private var productImage : UIImage?
     
+    private var imageAmt = 0
+    
     
     private lazy var addImageButton: UIButton = {
         let button = UIButton()
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.lightBorder.cgColor
         button.layer.cornerRadius = 8
-        button.setImage(UIImage(named: "image")?.withTintColor(.darkGray, renderingMode: .alwaysOriginal), for: .normal)
+        button.backgroundColor = UIColor.rgb(red: 239, green: 246, blue: 250)
+        button.setImage(UIImage(named: "icon_camera")?.withTintColor(.black, renderingMode: .alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleAddProductImage), for: .touchUpInside)
+        button.setTitle("\(imageAmt)/10", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 12)
+        button.setTitleColor(.black, for: .normal)
+        button.alignTextBelow()
+        
         return button
     }()
     
-    private lazy var productNameContainer: UIView = {
-        let view = Utilities().inputContainerView(title: "Name", textField: productNameTextField)
-        return view
+    private lazy var productNameContainer: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "제목"
+        return tf
     }()
     
-    private let productNameTextField: UITextField = {
-        let textfield = Utilities().textField(withPlaceHolder: "상품 이름")
-        return textfield
-    }()
     
     private lazy var productPriceContainer: UIView = {
-        let view = Utilities().inputContainerView(title: "Price", textField: productPriceTextField)
+        
+        let view = UIView()
+        
+        let label = UILabel()
+        label.text = "￦"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .lightGray
+        
+        let tf = UITextField()
+        tf.placeholder = "가격(선택사항)"
+        
+        let leftStack = UIStackView(arrangedSubviews: [label, tf])
+        
+        let cb = Checkbox()
+        let rightStack = UIStackView(arrangedSubviews: [cb])
+        
+        view.addSubview(leftStack)
+        view.addSubview(cb)
+        
         return view
     }()
     
@@ -67,18 +90,18 @@ class UploadController: UIViewController {
     @objc func handleUpload() {
         
         
-        guard let productImage = productImage else {return}
-        print("handle upload!")
-        guard let name = productNameTextField.text else {return}
-        guard let price = productPriceTextField.text else {return}
-        guard let description = productDescriptionTextField.text else {return}
-        
-        let product = ProductInformation(name: name, price: Int(price) ?? 0, description: description, productImage: productImage)
-        
-        ProductService.shared.registerProduct(productInfo: product) {
-            print("Registration of product Success!")
-            self.dismiss(animated: true)
-        }
+//        guard let productImage = productImage else {return}
+//        print("handle upload!")
+//        guard let name = ""
+//        guard let price = productPriceTextField.text else {return}
+//        guard let description = productDescriptionTextField.text else {return}
+//
+//        let product = ProductInformation(name: name, price: Int(price) ?? 0, description: description, productImage: productImage)
+//
+//        ProductService.shared.registerProduct(productInfo: product) {
+//            print("Registration of product Success!")
+//            self.dismiss(animated: true)
+//        }
     }
     
     @objc func handleDismissal() {
@@ -106,7 +129,9 @@ class UploadController: UIViewController {
         
         
         view.addSubview(addImageButton)
-        addImageButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, height: 200)
+        addImageButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20,width: 80, height: 80)
+        
+        
         
         let stack = UIStackView(arrangedSubviews: [productNameContainer, productPriceContainer, productDescriptionContainer])
         stack.axis = .vertical
