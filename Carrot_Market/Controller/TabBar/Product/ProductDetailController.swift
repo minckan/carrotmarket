@@ -32,21 +32,9 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             }
         }
     }
-    
+    let collectionView = UserProductListView()
     let footer = ProductDetailFooter()
     
-    let collectionView : UICollectionView = {
-        let flowlayout = UICollectionViewFlowLayout()
-        flowlayout.scrollDirection = .vertical
-        flowlayout.minimumLineSpacing = 1
-        flowlayout.minimumInteritemSpacing = 1
-        
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
-        cv.register(UserProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        cv.alwaysBounceVertical = true
-        
-        return cv
-    }()
     
     private let imageContainer = UIView()
     private lazy var productImageView : UIImageView = {
@@ -102,7 +90,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.systemGray5.cgColor
-        button.setDimensions(width: 100, height: 40)
         
         button.setTitle("판매중", for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -234,6 +221,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         
         scrollView.delegate = self
 
+
         configureUI()
         configureNavBar()
 
@@ -265,7 +253,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView.frame = view.bounds
     }
     
     
@@ -362,7 +349,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.top.equalTo(contentView.snp.top)
             make.height.equalTo(80)
         }
-        
+
         let divider = UIView()
         divider.backgroundColor = .systemGroupedBackground
         contentView.addArrangedSubview(divider)
@@ -379,7 +366,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.top.equalTo(userInfoStack.snp.bottom).offset(30)
             make.width.equalTo(120)
         }
-        
+        statusChangeButton.setDimensions(width: 100, height: 38)
         contentView.addArrangedSubview(productNameLabel)
         productNameLabel.snp.makeConstraints { make in
             make.top.equalTo(statusChangeButton.snp.bottom).offset(20)
@@ -412,7 +399,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         locationStack.snp.makeConstraints { make in
             make.top.equalTo(captionLabel.snp.bottom).offset(20)
         }
-        
+
         
         contentView.addArrangedSubview(mapView)
         mapView.snp.makeConstraints { make in
@@ -425,7 +412,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         interestAndInquiryLabel.snp.makeConstraints { make in
             make.top.equalTo(mapView.snp.bottom).offset(20)
         }
-        
         let relatedProductStack = UIStackView(arrangedSubviews: [relatedProductLabel, UIView(), relatedProductButton])
         relatedProductStack.alignment = .fill
         relatedProductStack.distribution = .fill
@@ -435,15 +421,16 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.top.equalTo(interestAndInquiryLabel.snp.bottom).offset(20)
         }
         
-        
-        
-        scrollView.addSubview(collectionView)
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        contentView.addArrangedSubview(collectionView)
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.bottom).offset(20)
+            make.top.equalTo(relatedProductStack.snp.bottom).offset(5)
+            make.left.equalTo(view)
+            make.right.equalTo(view)
+            make.bottom.equalTo(contentView)
+            make.width.equalTo(contentView.snp.width)
+            make.height.equalTo(400)
         }
-
+      
     }
     
     func configureCollectionView() {
@@ -540,21 +527,3 @@ extension ProductDetailController: UIScrollViewDelegate {
     }
 }
 
-extension ProductDetailController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("DEBUG: cellForItemAt called")
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! UserProductCell
-        cell.setDimensions(width: 100, height: 100)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("DEBUG: number called")
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
-    }
-    
-}

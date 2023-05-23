@@ -68,7 +68,7 @@ class MainTabController : UITabBarController{
         
         let nav1 = templateNavigationController(image: UIImage(named: "home"), title: "홈", rootViewController: product)
         
-        let community = CommunityController()
+        let community = CommunityController(collectionViewLayout: UICollectionViewFlowLayout())
         let nav2 = templateNavigationController(image: UIImage(named: "group"), title: "동네생활", rootViewController: community)
         
         let chat = ChatController()

@@ -15,7 +15,6 @@ class UserProductListView : UIView {
     
     // MARK: - Lifecycles
     override init(frame: CGRect) {
-        print("DEBUG: set collectionview called")
         let layout = UICollectionViewFlowLayout()
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -36,10 +35,16 @@ class UserProductListView : UIView {
         collectionView.dataSource = self
         
         addSubview(collectionView)
-        collectionView.frame = bounds
+        
+        collectionView.snp.makeConstraints { make in
+            make.width.equalTo(self.snp.width)
+            make.height.equalTo(self.snp.height)
+        }
+        
+        collectionView.backgroundColor = .white
+        
     }
     private func registerCells() {
-        print("DEBUG: registerCells")
         collectionView.register(UserProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
     }
@@ -51,14 +56,13 @@ extension UserProductListView : UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("DEBUG: cellForItemAt called")
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! UserProductCell
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let width = frame.size.width / 3
-            return CGSize(width: width - 4, height: width - 4)
+        let width = (self.frame.width - 30) / 2
+            return CGSize(width: width, height: width)
         }
 }
 

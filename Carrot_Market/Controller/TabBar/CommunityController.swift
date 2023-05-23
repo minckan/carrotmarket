@@ -7,7 +7,9 @@
 
 import UIKit
 
-class CommunityController: UIViewController {
+private let reuseIdentifier = "UserProductCell"
+
+class CommunityController: UICollectionViewController {
 
 
     // MARK: - Properties
@@ -28,6 +30,10 @@ class CommunityController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "동네생활"
+
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(UserProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
     func congigureNavBar() {
@@ -39,5 +45,20 @@ class CommunityController: UIViewController {
 extension CommunityController: CommonNavigationDelegate {
     var controller: UIViewController {
        return self
+    }
+}
+
+extension CommunityController : UICollectionViewDelegateFlowLayout{
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! UserProductCell
+        return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 100)
     }
 }
