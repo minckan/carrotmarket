@@ -11,6 +11,7 @@ import SDWebImage
 
 class ProductDetailHeader : UICollectionReusableView {
     // MARK: - Properties
+    static let identifier = "ProductDetailHeader"
 
     var product: Product? {
         didSet {

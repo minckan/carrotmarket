@@ -11,6 +11,8 @@ import Hero
 
 class ProductCell: UICollectionViewCell {
     // MARK: - Properties
+    static let identifier = "ProductCell"
+    
     var product: Product? {
         didSet {
             configure()

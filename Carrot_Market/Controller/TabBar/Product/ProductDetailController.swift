@@ -12,8 +12,6 @@ import SnapKit
 import LinkPresentation
 import MapKit
 
-private let reuseHeaderIdentifier = "ProductDetailHeader"
-private let reuseIdentifier = "UserProductCell"
 
 class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     // MARK: - Properties
@@ -431,10 +429,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.height.equalTo(400)
         }
       
-    }
-    
-    func configureCollectionView() {
-
     }
     
     func configureMap() {

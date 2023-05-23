@@ -7,8 +7,6 @@
 
 import UIKit
 
-private let reuseIdentifier = "UserProductCell"
-
 class UserProductListView : UIView {
     // MARK: - Properties
     private let collectionView: UICollectionView
@@ -45,7 +43,7 @@ class UserProductListView : UIView {
         
     }
     private func registerCells() {
-        collectionView.register(UserProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(UserProductCell.self, forCellWithReuseIdentifier: UserProductCell.identifier)
         
     }
 }
@@ -56,7 +54,7 @@ extension UserProductListView : UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! UserProductCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserProductCell.identifier, for: indexPath) as! UserProductCell
         return cell
     }
     

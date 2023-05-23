@@ -8,7 +8,7 @@
 import UIKit
 import Hero
 
-private let reuseIdentifier = "ProductCell"
+
 
 class ProductController: UICollectionViewController {
 
@@ -37,8 +37,6 @@ class ProductController: UICollectionViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        // TODO: 네비게이션 바 컬러 변경하기
-//        navigationController?.navigationBar.isHidden = false
     }
     
 
@@ -55,7 +53,7 @@ class ProductController: UICollectionViewController {
     // MARK: - Helpers
     func configureUI() {
         view.backgroundColor = .white
-        collectionView.register(ProductCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.backgroundColor = .white
     }
     
@@ -73,17 +71,15 @@ extension ProductController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProductCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCell.identifier, for: indexPath) as! ProductCell
         
         cell.product = products[indexPath.row]
         return cell
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let controller = ProductDetailController(product: products[indexPath.row])
-//        let controller = ProductDetailController2(product: products[indexPath.row])
-//        let vc = MyHostingController(rootView: ProductDetailVC())
         let nav = DynamicStatusBarNavigation(rootViewController: controller)
-//        navigationController?.pushViewController(controller, animated: true)
+
         nav.modalPresentationStyle = .fullScreen
         nav.hero.isEnabled = true
         nav.hero.modalAnimationType = .selectBy(presenting: .push(direction: .left), dismissing: .pull(direction: .right))
