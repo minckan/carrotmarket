@@ -92,15 +92,11 @@ class Utilities {
     func textFieldWithMultiline(withPlaceholder placeholder: String) -> UITextView {
         let tv = UITextView()
         tv.text = placeholder
-        tv.textColor = .lightGray
-        tv.font = UIFont.systemFont(ofSize: 16)
+        tv.textColor = .systemGray3
+        tv.font = UIFont.systemFont(ofSize: 15)
         tv.layer.masksToBounds = true
-        tv.layer.cornerRadius = 6
-        tv.layer.borderWidth = 1
-        tv.layer.borderColor = UIColor.lightBorder.cgColor
         tv.heightAnchor.constraint(equalToConstant: 130).isActive = true
         tv.isEditable = true
-        tv.setPadding(top: 12, left: 6, bottom: 12, right: 6)
         return tv
     }
 }

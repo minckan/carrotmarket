@@ -7,7 +7,7 @@
 
 import UIKit
 
-private let descriptionPlaceHolderString = "상품을 자세히 설명해주세요"
+
 
 class UploadController: UIViewController {
     // MARK: - Properties
@@ -17,9 +17,14 @@ class UploadController: UIViewController {
     
     private var imageAmt = 0
     
+    private let shareCheckbox = Checkbox(withLabel: "나눔")
+    private let negoCheckbox = Checkbox(withLabel: "가격 제안 받기")
+    
+    private let descriptionPlaceHolderString = "게시글 내용을 작성해주세요.(가품 및 판매 금지 물품은 게시가 제한될 수 있어요.)"
+    
     
     private lazy var addImageButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.lightBorder.cgColor
         button.layer.cornerRadius = 8
@@ -37,6 +42,7 @@ class UploadController: UIViewController {
     private lazy var productNameContainer: UITextField = {
         let tf = UITextField()
         tf.placeholder = "제목"
+        tf.font = UIFont.systemFont(ofSize: 16)
         return tf
     }()
     
@@ -52,15 +58,24 @@ class UploadController: UIViewController {
         
         let tf = UITextField()
         tf.placeholder = "가격(선택사항)"
+        tf.font = UIFont.systemFont(ofSize: 16)
+
+        tf.addTarget(self, action: #selector(handleEditingPrice), for: .editingChanged)
+        tf.keyboardType = .numberPad
         
         let leftStack = UIStackView(arrangedSubviews: [label, tf])
-        
-        let cb = Checkbox()
-        let rightStack = UIStackView(arrangedSubviews: [cb])
-        
+        leftStack.spacing = 10
+
+        let rightStack = UIStackView(arrangedSubviews: [shareCheckbox])
         view.addSubview(leftStack)
-        view.addSubview(cb)
-        
+        leftStack.snp.makeConstraints { make in
+            make.left.top.equalTo(view)
+        }
+        view.addSubview(rightStack)
+        rightStack.snp.makeConstraints { make in
+            make.top.right.equalTo(view)
+        }
+
         return view
     }()
     
@@ -69,10 +84,6 @@ class UploadController: UIViewController {
         return textfield
     }()
     
-    private lazy var productDescriptionContainer: UIView = {
-        let view = Utilities().inputContainerViewWithMultiline(title: "Description", textField: productDescriptionTextField)
-        return view
-    }()
     
     private lazy var productDescriptionTextField: UITextView = {
         let textView = Utilities().textFieldWithMultiline(withPlaceholder: descriptionPlaceHolderString)
@@ -83,6 +94,7 @@ class UploadController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureNavBar()
         configureUI()
     }
     
@@ -112,34 +124,42 @@ class UploadController: UIViewController {
         present(imagePicker, animated: true)
     }
     
+    @objc func handleEditingPrice(_ textField: UITextField) {
+        negoCheckbox.enabled = textField.hasText
+    }
+    
     // MARK: - API
     
     // MARK: - Helpers
-    func configureUI() {
-        
-        imagePicker.delegate = self
-        imagePicker.allowsEditing = true
-        
+    func configureNavBar() {
         view.backgroundColor = .white
         navigationItem.title = "상품 등록하기"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(handleDismissal))
         let uploadButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(handleUpload))
         uploadButton.tintColor = .carrotOrange500
         navigationItem.rightBarButtonItem = uploadButton
+    }
+    func configureUI() {
         
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
         
         view.addSubview(addImageButton)
         addImageButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20,width: 80, height: 80)
         
+        view.addSubview(productNameContainer)
+        productNameContainer.anchor(top: addImageButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20)
         
+        view.addSubview(productPriceContainer)
+        productPriceContainer.anchor(top: productNameContainer.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 20)
         
-        let stack = UIStackView(arrangedSubviews: [productNameContainer, productPriceContainer, productDescriptionContainer])
-        stack.axis = .vertical
-        stack.spacing = 10
-        productDescriptionContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(negoCheckbox)
+        negoCheckbox.anchor(top: productPriceContainer.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        negoCheckbox.enabled = false
         
-        view.addSubview(stack)
-        stack.anchor(top: addImageButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 22, paddingLeft: 20, paddingRight: 20)
+        view.addSubview(productDescriptionTextField)
+        productDescriptionTextField.anchor(top: negoCheckbox.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 50, paddingLeft: 18, paddingRight: 20)
+
     }
     
 
@@ -153,6 +173,7 @@ extension UploadController : UITextViewDelegate {
             textView.text = nil
             textView.textColor = .darkGray
         }
+        
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -178,4 +199,8 @@ extension UploadController: UIImagePickerControllerDelegate, UINavigationControl
         
         dismiss(animated: true)
     }
+}
+
+extension UploadController : UITextFieldDelegate {
+    
 }
