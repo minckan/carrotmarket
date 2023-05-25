@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CheckboxDelegate: AnyObject {
-
+    func handleCheckbox(withId id: String, enabled: Bool)
 }
 
 class Checkbox : UIView {
@@ -21,6 +21,8 @@ class Checkbox : UIView {
             toggleDisable()
         }
     }
+    
+    private var id:String?
     
     private let checkbox : UIButton = {
         let button = UIButton(type: .system)
@@ -46,10 +48,12 @@ class Checkbox : UIView {
         configureUI(labelText: nil)
     }
     
-    convenience init(withLabel labelText : String) {
+    convenience init(withLabel labelText : String, id: String?) {
         self.init(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         commonInit()
         configureUI(labelText: labelText)
+        guard let id  = id else {return}
+        self.id = id
     }
     
     required init?(coder: NSCoder) {
@@ -84,7 +88,6 @@ class Checkbox : UIView {
     }
     
     func toggleDisable() {
-        print("DEBUG: toggle disbale called. enabled is \(enabled)")
         guard let enabled = enabled else {return}
         if enabled == false {
             checkbox.backgroundColor = .lightGray
@@ -101,7 +104,6 @@ class Checkbox : UIView {
     
     // MARK: - Selectors
     @objc func handleCheckbox() {
-        print("DEBUG: \(isChecked)")
         if !isChecked {
             checkbox.backgroundColor = .carrotOrange500
         } else {
@@ -109,5 +111,8 @@ class Checkbox : UIView {
         }
         
         isChecked.toggle()
+        
+        guard let id = id else {return}
+        delegate?.handleCheckbox(withId: id, enabled: isChecked)
     }
 }

@@ -17,8 +17,8 @@ class UploadController: UIViewController {
     
     private var imageAmt = 0
     
-    private let shareCheckbox = Checkbox(withLabel: "나눔")
-    private let negoCheckbox = Checkbox(withLabel: "가격 제안 받기")
+    private let shareCheckbox = Checkbox(withLabel: "나눔", id: "SHARE")
+    private let negoCheckbox = Checkbox(withLabel: "가격 제안 받기", id: "NEGO")
     
     private let descriptionPlaceHolderString = "게시글 내용을 작성해주세요.(가품 및 판매 금지 물품은 게시가 제한될 수 있어요.)"
     
@@ -46,15 +46,15 @@ class UploadController: UIViewController {
         return tf
     }()
     
+    private lazy var unitLabel = UILabel()
     
     private lazy var productPriceContainer: UIView = {
         
         let view = UIView()
         
-        let label = UILabel()
-        label.text = "￦"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .lightGray
+        unitLabel.text = "￦"
+        unitLabel.font = UIFont.systemFont(ofSize: 16)
+        unitLabel.textColor = .lightGray
         
         let tf = UITextField()
         tf.placeholder = "가격(선택사항)"
@@ -63,7 +63,7 @@ class UploadController: UIViewController {
         tf.addTarget(self, action: #selector(handleEditingPrice), for: .editingChanged)
         tf.keyboardType = .numberPad
         
-        let leftStack = UIStackView(arrangedSubviews: [label, tf])
+        let leftStack = UIStackView(arrangedSubviews: [unitLabel, tf])
         leftStack.spacing = 10
 
         let rightStack = UIStackView(arrangedSubviews: [shareCheckbox])
@@ -126,6 +126,8 @@ class UploadController: UIViewController {
     
     @objc func handleEditingPrice(_ textField: UITextField) {
         negoCheckbox.enabled = textField.hasText
+        if textField.hasText {unitLabel.textColor = .black}
+        else {unitLabel.textColor = .lightGray}
     }
     
     // MARK: - API
@@ -143,6 +145,8 @@ class UploadController: UIViewController {
         
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
+        shareCheckbox.delegate = self
+        negoCheckbox.delegate = self
         
         view.addSubview(addImageButton)
         addImageButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20,width: 80, height: 80)
@@ -201,6 +205,13 @@ extension UploadController: UIImagePickerControllerDelegate, UINavigationControl
     }
 }
 
-extension UploadController : UITextFieldDelegate {
+extension UploadController : CheckboxDelegate {
+    func handleCheckbox(withId id: String, enabled: Bool) {
+        if id == "SHARE" {
+            print("DEBUG: share checked \(enabled)")
+        } else if id == "NEGO" {
+            print("DEBUG: nego checked \(enabled)")
+        }
+    }
     
 }
