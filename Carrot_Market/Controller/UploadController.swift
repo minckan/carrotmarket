@@ -13,16 +13,39 @@ class UploadController: UIViewController {
     // MARK: - Properties
     
     private let imagePicker = UIImagePickerController()
-    private var productImage : UIImage?
+//    private var productImage : UIImage?
     
-    private var imageAmt = 0
+    private var productImages = [UIView]()
     
     private let shareCheckbox = Checkbox(withLabel: "나눔", id: "SHARE")
     private let negoCheckbox = Checkbox(withLabel: "가격 제안 받기", id: "NEGO")
     
     private let descriptionPlaceHolderString = "게시글 내용을 작성해주세요.(가품 및 판매 금지 물품은 게시가 제한될 수 있어요.)"
     
+    private enum Const {
+        static let itemSize = CGSize(width: 90, height: 80)
+        static let itemSpacing = 15.0
+    }
     
+    private let imageCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = Const.itemSize
+        layout.minimumLineSpacing = Const.itemSpacing
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+        
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = true
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = true
+        collectionView.backgroundColor = .clear
+        collectionView.clipsToBounds = true
+        collectionView.register(UpdateImageCell.self, forCellWithReuseIdentifier: UpdateImageCell.identifier)
+        return collectionView
+    }()
+
     private lazy var addImageButton: UIButton = {
         let button = UIButton(type: .system)
         button.layer.borderWidth = 1
@@ -31,7 +54,7 @@ class UploadController: UIViewController {
         button.backgroundColor = UIColor.rgb(red: 239, green: 246, blue: 250)
         button.setImage(UIImage(named: "icon_camera")?.withTintColor(.black, renderingMode: .alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleAddProductImage), for: .touchUpInside)
-        button.setTitle("\(imageAmt)/10", for: .normal)
+        button.setTitle("0/10", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12)
         button.setTitleColor(.black, for: .normal)
         button.alignTextBelow()
@@ -133,6 +156,7 @@ class UploadController: UIViewController {
     // MARK: - API
     
     // MARK: - Helpers
+
     func configureNavBar() {
         view.backgroundColor = .white
         navigationItem.title = "상품 등록하기"
@@ -148,11 +172,17 @@ class UploadController: UIViewController {
         shareCheckbox.delegate = self
         negoCheckbox.delegate = self
         
-        view.addSubview(addImageButton)
-        addImageButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20,width: 80, height: 80)
+        imageCollectionView.delegate = self
+        imageCollectionView.dataSource = self
+        
+        productImages.append(addImageButton)
+        
+        
+        view.addSubview(imageCollectionView)
+        imageCollectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 90)
         
         view.addSubview(productNameContainer)
-        productNameContainer.anchor(top: addImageButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20)
+        productNameContainer.anchor(top: imageCollectionView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20)
         
         view.addSubview(productPriceContainer)
         productPriceContainer.anchor(top: productNameContainer.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 20)
@@ -164,6 +194,21 @@ class UploadController: UIViewController {
         view.addSubview(productDescriptionTextField)
         productDescriptionTextField.anchor(top: negoCheckbox.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 50, paddingLeft: 18, paddingRight: 20)
 
+    }
+    
+    
+    func scrollToLast() {
+        // 데이터 변경 후 UI 업데이트
+        imageCollectionView.reloadData()
+        addImageButton.setTitle("\(productImages.count - 1)/10", for: .normal)
+        
+        // 마지막 IndexPath 계산
+        let lastSection = imageCollectionView.numberOfSections - 1
+        let lastItem = imageCollectionView.numberOfItems(inSection: lastSection) - 1
+        let lastIndexPath = IndexPath(item: lastItem, section: lastSection)
+
+        // 마지막 셀로 스크롤하여 포커스 설정
+        imageCollectionView.scrollToItem(at: lastIndexPath, at: .right, animated: true)
     }
     
 
@@ -192,14 +237,16 @@ extension UploadController: UIImagePickerControllerDelegate, UINavigationControl
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let productImage = info[.editedImage] as? UIImage else {return}
-        self.productImage = productImage
+        // TODO: 이미지가 중복되면 리턴
         
-        addImageButton.imageView?.contentMode = .scaleAspectFit
-        addImageButton.imageView?.clipsToBounds = true
-        addImageButton.layer.masksToBounds = true
-        addImageButton.layer.borderWidth = 0
-        
-        self.addImageButton.setImage(productImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        if productImages.count < 10 {
+            let iv = UIImageView(image: productImage)
+            iv.layer.cornerRadius = 8
+            iv.layer.masksToBounds = true
+            
+            self.productImages.append(iv)
+            scrollToLast()
+        }
         
         dismiss(animated: true)
     }
@@ -214,4 +261,30 @@ extension UploadController : CheckboxDelegate {
         }
     }
     
+}
+
+extension UploadController : UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return productImages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = imageCollectionView.dequeueReusableCell(withReuseIdentifier: UpdateImageCell.identifier, for: indexPath) as! UpdateImageCell
+        cell.delegate = self
+        cell.view = productImages[indexPath.row]
+        cell.index = indexPath.row
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return Const.itemSize
+    }
+}
+
+extension UploadController: UpdateImageCellDelegate {
+    func handleDeleteImage(at index: Int) {
+        productImages.remove(at: index)
+        scrollToLast()
+    }
 }
