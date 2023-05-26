@@ -61,3 +61,11 @@ func resizeImage(image: UIImage, newWidth: CGFloat, newHeight: CGFloat) -> UIIma
     
     return newImage
 }
+
+
+func createDivider(superview: UIView,  view : UIView, paddingTop top: CGFloat) {
+    let line = UIView()
+    line.backgroundColor = .systemGroupedBackground
+    superview.addSubview(line)
+    line.anchor(top: view.bottomAnchor, left: superview.leftAnchor, right: superview.rightAnchor, paddingTop: top, paddingLeft: 20, paddingRight: 20, height: 0.75)
+}

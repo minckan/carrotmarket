@@ -51,6 +51,14 @@ class UpdateImageCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
+    
     // MARK: - Selectors
     @objc func handleDelete() {
         guard let index = index else {return}
@@ -69,7 +77,12 @@ class UpdateImageCell: UICollectionViewCell {
     
     private func configureUI() {
         guard let index = index else {return}
-        if index == 1 {setRepresentPhoto()}
+        if index == 1 {setRepresentPhoto()} else {
+            if let subview = subviews.first(where: {$0.tag == 50000}) {
+                subview.removeFromSuperview()
+                print("DEBUG: remove?")
+            }
+        }
         if index > 0 {setDeleteButton()}
         else {
             if let subview = subviews.first(where: {$0.tag == 10000}) {
@@ -106,6 +119,6 @@ class UpdateImageCell: UICollectionViewCell {
         label.layer.cornerRadius = 8
         label.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         label.layer.masksToBounds = true
-        
+        label.tag = 50000
     }
 }

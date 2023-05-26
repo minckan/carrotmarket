@@ -11,11 +11,26 @@ protocol CheckboxDelegate: AnyObject {
     func handleCheckbox(withId id: String, enabled: Bool)
 }
 
+enum CheckItems : String, CaseIterable {
+    case share = "SHARE"
+    case nego = "NEGO"
+    case event = "EVENT"
+    
+    var label : String {
+        switch self {
+        case .share: return "나눔"
+        case .nego: return "가격 제안 받기"
+        case .event: return "나눔 이벤트 열기"
+        }
+    }
+}
+
 class Checkbox : UIView {
     // MARK: - Properties
     weak var delegate : CheckboxDelegate?
     
     private var isChecked = false
+    
     var enabled : Bool? = nil {
         didSet {
             toggleDisable()
@@ -54,6 +69,13 @@ class Checkbox : UIView {
         configureUI(labelText: labelText)
         guard let id  = id else {return}
         self.id = id
+    }
+    
+    convenience init(type: CheckItems) {
+        self.init(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        commonInit()
+        configureUI(labelText: type.label)
+        self.id = type.rawValue
     }
     
     required init?(coder: NSCoder) {
@@ -100,6 +122,11 @@ class Checkbox : UIView {
         }
         
         checkbox.isEnabled = enabled
+    }
+    
+    func changeContents(type: CheckItems) {
+        self.label.text = type.label
+        self.id = type.rawValue
     }
     
     // MARK: - Selectors

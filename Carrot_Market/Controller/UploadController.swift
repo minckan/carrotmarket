@@ -8,7 +8,6 @@
 import UIKit
 
 
-
 class UploadController: UIViewController {
     // MARK: - Properties
     
@@ -17,8 +16,8 @@ class UploadController: UIViewController {
     
     private var productImages = [UIView]()
     
-    private let shareCheckbox = Checkbox(withLabel: "나눔", id: "SHARE")
-    private let negoCheckbox = Checkbox(withLabel: "가격 제안 받기", id: "NEGO")
+    private let shareCheckbox = Checkbox(type: .share)
+    private var negoCheckbox = Checkbox(type: .nego)
     
     private let descriptionPlaceHolderString = "게시글 내용을 작성해주세요.(가품 및 판매 금지 물품은 게시가 제한될 수 있어요.)"
     
@@ -26,6 +25,7 @@ class UploadController: UIViewController {
         static let itemSize = CGSize(width: 90, height: 80)
         static let itemSpacing = 15.0
     }
+    
     
     private let imageCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -42,6 +42,7 @@ class UploadController: UIViewController {
         collectionView.showsVerticalScrollIndicator = true
         collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = true
+
         collectionView.register(UpdateImageCell.self, forCellWithReuseIdentifier: UpdateImageCell.identifier)
         return collectionView
     }()
@@ -71,6 +72,15 @@ class UploadController: UIViewController {
     
     private lazy var unitLabel = UILabel()
     
+    private let productPriceTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "가격(선택사항)"
+        tf.font = UIFont.systemFont(ofSize: 16)
+        tf.addTarget(self, action: #selector(handleEditingPrice), for: .editingChanged)
+        tf.keyboardType = .numberPad
+        return tf
+    }()
+    
     private lazy var productPriceContainer: UIView = {
         
         let view = UIView()
@@ -79,13 +89,9 @@ class UploadController: UIViewController {
         unitLabel.font = UIFont.systemFont(ofSize: 16)
         unitLabel.textColor = .lightGray
         
-        let tf = UITextField()
-        tf.placeholder = "가격(선택사항)"
-        tf.font = UIFont.systemFont(ofSize: 16)
-
-        tf.addTarget(self, action: #selector(handleEditingPrice), for: .editingChanged)
-        tf.keyboardType = .numberPad
+        let tf = productPriceTextField
         
+
         let leftStack = UIStackView(arrangedSubviews: [unitLabel, tf])
         leftStack.spacing = 10
 
@@ -101,13 +107,7 @@ class UploadController: UIViewController {
 
         return view
     }()
-    
-    private let productPriceTextField: UITextField = {
-        let textfield = Utilities().textField(withPlaceHolder: "상품 가격")
-        return textfield
-    }()
-    
-    
+
     private lazy var productDescriptionTextField: UITextView = {
         let textView = Utilities().textFieldWithMultiline(withPlaceholder: descriptionPlaceHolderString)
         textView.delegate = self
@@ -159,8 +159,8 @@ class UploadController: UIViewController {
 
     func configureNavBar() {
         view.backgroundColor = .white
-        navigationItem.title = "상품 등록하기"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(handleDismissal))
+        navigationItem.title = "내 물건 팔기"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "x")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(handleDismissal))
         let uploadButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(handleUpload))
         uploadButton.tintColor = .carrotOrange500
         navigationItem.rightBarButtonItem = uploadButton
@@ -172,23 +172,38 @@ class UploadController: UIViewController {
         shareCheckbox.delegate = self
         negoCheckbox.delegate = self
         
+        imageCollectionView.dragInteractionEnabled = true
+        imageCollectionView.isUserInteractionEnabled = true
+        
         imageCollectionView.delegate = self
         imageCollectionView.dataSource = self
+        imageCollectionView.dragDelegate = self
+        imageCollectionView.dropDelegate = self
         
+
+
+
         productImages.append(addImageButton)
         
         
         view.addSubview(imageCollectionView)
         imageCollectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 90)
         
+        createDivider(superview: view, view: imageCollectionView, paddingTop: 24.0)
+
         view.addSubview(productNameContainer)
         productNameContainer.anchor(top: imageCollectionView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingRight: 20)
         
+        createDivider(superview: view, view: productNameContainer, paddingTop: 15.0)
+        
         view.addSubview(productPriceContainer)
-        productPriceContainer.anchor(top: productNameContainer.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 20)
+        productPriceContainer.anchor(top: productNameContainer.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 30)
+
+        
+        createDivider(superview: view, view: productPriceContainer, paddingTop: 10)
         
         view.addSubview(negoCheckbox)
-        negoCheckbox.anchor(top: productPriceContainer.bottomAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 20)
+        negoCheckbox.anchor(top: productPriceContainer.bottomAnchor, left: view.leftAnchor, paddingTop: 30, paddingLeft: 20)
         negoCheckbox.enabled = false
         
         view.addSubview(productDescriptionTextField)
@@ -255,9 +270,20 @@ extension UploadController: UIImagePickerControllerDelegate, UINavigationControl
 extension UploadController : CheckboxDelegate {
     func handleCheckbox(withId id: String, enabled: Bool) {
         if id == "SHARE" {
-            print("DEBUG: share checked \(enabled)")
+            productPriceTextField.isEnabled = !enabled
+            if enabled {
+                negoCheckbox.changeContents(type: .event)
+                negoCheckbox.enabled = true
+                productPriceTextField.text = nil
+                unitLabel.textColor = .lightGray
+            } else {
+                negoCheckbox.changeContents(type: .nego)
+                negoCheckbox.enabled = false
+            }
         } else if id == "NEGO" {
             print("DEBUG: nego checked \(enabled)")
+        } else if id == "SHARE_EVENT" {
+            print("DEBUG: event checked \(enabled)")
         }
     }
     
@@ -274,12 +300,19 @@ extension UploadController : UICollectionViewDelegate, UICollectionViewDelegateF
         cell.view = productImages[indexPath.row]
         cell.index = indexPath.row
         
+        print("DEBUG: cellForItemAt called. index is \(indexPath.row)")
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return Const.itemSize
     }
+    
+    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
 }
 
 extension UploadController: UpdateImageCellDelegate {
@@ -287,4 +320,88 @@ extension UploadController: UpdateImageCellDelegate {
         productImages.remove(at: index)
         scrollToLast()
     }
+}
+
+extension UploadController : UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+    
+
+    
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? UICollectionViewCell else {
+            return nil
+        }
+        let previewParameters = UIDragPreviewParameters()
+        previewParameters.visiblePath = UIBezierPath(rect: cell.bounds)
+        if #available(iOS 14.0, *) {
+            previewParameters.shadowPath = UIBezierPath(rect: .zero)
+        }
+        return previewParameters
+    }
+
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
+        
+        if indexPath.row == 0 {
+            let dummyItemProvider = NSItemProvider()
+            let dummyDragItem = UIDragItem(itemProvider: dummyItemProvider)
+            return [dummyDragItem]
+        }
+        
+        let imageView = productImages[indexPath.row] as! UIImageView
+
+        let image = imageView.image // UIImageView에서 이미지 추출
+        if let image = image {
+            let itemProvider = NSItemProvider(object: image)
+            let dragItem = UIDragItem(itemProvider: itemProvider)
+            dragItem.localObject = image
+        
+            
+            return [dragItem]
+            
+        } else {
+            return [] // 드래그할 이미지가 없는 경우 빈 배열 반환
+        }
+       
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        
+        guard let destinationIndexPath = destinationIndexPath else {return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)}
+        
+        if destinationIndexPath.row > 0 && session.localDragSession != nil {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else {return}
+        
+        coordinator.items.forEach { dropItem in
+            guard let sourceIndexPath = dropItem.sourceIndexPath else {return}
+            let dragIv = self.productImages[sourceIndexPath.row]
+            
+            imageCollectionView.performBatchUpdates({
+                imageCollectionView.deleteItems(at: [sourceIndexPath])
+                imageCollectionView.insertItems(at: [destinationIndexPath])
+                
+                self.productImages.remove(at: sourceIndexPath.row)
+                self.productImages.insert(dragIv, at: destinationIndexPath.row)
+                
+            }) { _ in
+                coordinator.drop(dropItem.dragItem, toItemAt: destinationIndexPath)
+            }
+        }
+    
+        // 드롭할때 라벨을 새로 그리기 위해 호출
+        for (index, _) in productImages.enumerated() {
+            let indexPath : IndexPath = [0, index]
+            let cell = collectionView.cellForItem(at: indexPath) as! UpdateImageCell
+            cell.index = index
+        }
+    }
+    
+    
+    
 }
