@@ -23,7 +23,7 @@ class UploadController: UIViewController {
     
     private enum Const {
         static let itemSize = CGSize(width: 90, height: 80)
-        static let itemSpacing = 15.0
+        static let itemSpacing = 10.0
     }
     
     
@@ -43,7 +43,7 @@ class UploadController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = true
 
-        collectionView.register(UpdateImageCell.self, forCellWithReuseIdentifier: UpdateImageCell.identifier)
+        
         return collectionView
     }()
 
@@ -144,7 +144,7 @@ class UploadController: UIViewController {
     }
     
     @objc func handleAddProductImage() {
-        present(imagePicker, animated: true)
+    
     }
     
     @objc func handleEditingPrice(_ textField: UITextField) {
@@ -180,11 +180,9 @@ class UploadController: UIViewController {
         imageCollectionView.dragDelegate = self
         imageCollectionView.dropDelegate = self
         
-
-
-
-        productImages.append(addImageButton)
         
+        imageCollectionView.register(UpdateImageCell.self, forCellWithReuseIdentifier: UpdateImageCell.identifier)
+        imageCollectionView.register(UpdateImageHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: UpdateImageHeader.identifier)
         
         view.addSubview(imageCollectionView)
         imageCollectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: view.frame.width, height: 90)
@@ -215,7 +213,8 @@ class UploadController: UIViewController {
     func scrollToLast() {
         // 데이터 변경 후 UI 업데이트
         imageCollectionView.reloadData()
-        addImageButton.setTitle("\(productImages.count - 1)/10", for: .normal)
+//        addImageButton.setTitle("\(productImages.count - 1)/10", for: .normal)
+        
         
         // 마지막 IndexPath 계산
         let lastSection = imageCollectionView.numberOfSections - 1
@@ -231,6 +230,8 @@ class UploadController: UIViewController {
     
 }
 
+
+// MARK: - UITextViewDelegate
 extension UploadController : UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == descriptionPlaceHolderString {
@@ -248,6 +249,7 @@ extension UploadController : UITextViewDelegate {
     }
 }
 
+// MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
 extension UploadController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
@@ -267,6 +269,7 @@ extension UploadController: UIImagePickerControllerDelegate, UINavigationControl
     }
 }
 
+// MARK: - CheckboxDelegate
 extension UploadController : CheckboxDelegate {
     func handleCheckbox(withId id: String, enabled: Bool) {
         if id == "SHARE" {
@@ -289,6 +292,7 @@ extension UploadController : CheckboxDelegate {
     
 }
 
+// MARK: - UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource
 extension UploadController : UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return productImages.count
@@ -300,9 +304,21 @@ extension UploadController : UICollectionViewDelegate, UICollectionViewDelegateF
         cell.view = productImages[indexPath.row]
         cell.index = indexPath.row
         
-        print("DEBUG: cellForItemAt called. index is \(indexPath.row)")
-        
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: UpdateImageHeader.identifier, for: indexPath) as! UpdateImageHeader
+        
+        header.delegate = self
+        
+        header.imageCount = productImages.count
+        
+        return header
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: Const.itemSize.width + Const.itemSpacing, height: Const.itemSize.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -315,6 +331,7 @@ extension UploadController : UICollectionViewDelegate, UICollectionViewDelegateF
     
 }
 
+// MARK: - UpdateImageCellDelegate
 extension UploadController: UpdateImageCellDelegate {
     func handleDeleteImage(at index: Int) {
         productImages.remove(at: index)
@@ -322,6 +339,7 @@ extension UploadController: UpdateImageCellDelegate {
     }
 }
 
+// MARK: -  UICollectionViewDragDelegate, UICollectionViewDropDelegate
 extension UploadController : UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
 
@@ -341,13 +359,6 @@ extension UploadController : UICollectionViewDragDelegate, UICollectionViewDropD
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
-        
-        if indexPath.row == 0 {
-            let dummyItemProvider = NSItemProvider()
-            let dummyDragItem = UIDragItem(itemProvider: dummyItemProvider)
-            return [dummyDragItem]
-        }
-        
         let imageView = productImages[indexPath.row] as! UIImageView
 
         let image = imageView.image // UIImageView에서 이미지 추출
@@ -365,13 +376,11 @@ extension UploadController : UICollectionViewDragDelegate, UICollectionViewDropD
        
     }
     
-    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-        
-        guard let destinationIndexPath = destinationIndexPath else {return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)}
-        
-        if destinationIndexPath.row > 0 && session.localDragSession != nil {
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {  
+        if session.localDragSession != nil {
             return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
         }
+
         return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
     }
     
@@ -393,15 +402,20 @@ extension UploadController : UICollectionViewDragDelegate, UICollectionViewDropD
                 coordinator.drop(dropItem.dragItem, toItemAt: destinationIndexPath)
             }
         }
-    
+        
         // 드롭할때 라벨을 새로 그리기 위해 호출
-        for (index, _) in productImages.enumerated() {
+        for (index, _) in self.productImages.enumerated() {
             let indexPath : IndexPath = [0, index]
-            let cell = collectionView.cellForItem(at: indexPath) as! UpdateImageCell
-            cell.index = index
+            if let cell = collectionView.cellForItem(at: indexPath) as? UpdateImageCell {
+                cell.index = index
+            }
+            
         }
     }
-    
-    
-    
+}
+
+extension UploadController: UpdateImageHeaderDelegate {
+    func handleImagePicker() {
+        present(imagePicker, animated: true)
+    }
 }

@@ -29,7 +29,7 @@ class UpdateImageCell: UICollectionViewCell {
     var index : Int? {
         didSet {
             configureUI()
-            print("DEBUG: new index is set as \(index)")
+       
         }
     }
 
@@ -85,13 +85,9 @@ class UpdateImageCell: UICollectionViewCell {
         if let subview = subviews.first(where: {$0.tag == REPRESENT_LABEL_TAG_ID}) {
             subview.removeFromSuperview()
         }
-        if index == 1 {setRepresentPhotoLabel()}
-        if index > 0 {setDeleteButton()}
-        else {
-            if let subview = subviews.first(where: {$0.tag == DELETE_BUTTON_TAG_ID}) {
-                subview.removeFromSuperview()
-            }
-        }
+        if index == 0 {setRepresentPhotoLabel()}
+        
+        setDeleteButton()
     }
     
     func setDeleteButton() {
@@ -125,3 +121,5 @@ class UpdateImageCell: UICollectionViewCell {
         label.tag = REPRESENT_LABEL_TAG_ID
     }
 }
+
+
