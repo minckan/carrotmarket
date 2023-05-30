@@ -11,6 +11,9 @@ protocol UpdateImageCellDelegate: AnyObject {
     func handleDeleteImage(at index: Int)
 }
 
+private let REPRESENT_LABEL_TAG_ID = 50000
+private let DELETE_BUTTON_TAG_ID = 10000
+
 class UpdateImageCell: UICollectionViewCell {
     static let identifier = "UpdateImageCell"
     
@@ -26,6 +29,7 @@ class UpdateImageCell: UICollectionViewCell {
     var index : Int? {
         didSet {
             configureUI()
+            print("DEBUG: new index is set as \(index)")
         }
     }
 
@@ -77,15 +81,14 @@ class UpdateImageCell: UICollectionViewCell {
     
     private func configureUI() {
         guard let index = index else {return}
-        if index == 1 {setRepresentPhoto()} else {
-            if let subview = subviews.first(where: {$0.tag == 50000}) {
-                subview.removeFromSuperview()
-                print("DEBUG: remove?")
-            }
+        
+        if let subview = subviews.first(where: {$0.tag == REPRESENT_LABEL_TAG_ID}) {
+            subview.removeFromSuperview()
         }
+        if index == 1 {setRepresentPhotoLabel()}
         if index > 0 {setDeleteButton()}
         else {
-            if let subview = subviews.first(where: {$0.tag == 10000}) {
+            if let subview = subviews.first(where: {$0.tag == DELETE_BUTTON_TAG_ID}) {
                 subview.removeFromSuperview()
             }
         }
@@ -98,11 +101,11 @@ class UpdateImageCell: UICollectionViewCell {
             make.top.equalTo(self).offset(-10)
         }
         deleteBtn.addTarget(self, action:#selector(handleDelete) , for: .touchUpInside)
-        deleteBtn.tag = 10000
+        deleteBtn.tag = DELETE_BUTTON_TAG_ID
     }
     
 
-    func setRepresentPhoto() {
+    func setRepresentPhotoLabel() {
         let label = UILabel()
         label.text = "대표사진"
         addSubview(label)
@@ -119,6 +122,6 @@ class UpdateImageCell: UICollectionViewCell {
         label.layer.cornerRadius = 8
         label.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         label.layer.masksToBounds = true
-        label.tag = 50000
+        label.tag = REPRESENT_LABEL_TAG_ID
     }
 }
