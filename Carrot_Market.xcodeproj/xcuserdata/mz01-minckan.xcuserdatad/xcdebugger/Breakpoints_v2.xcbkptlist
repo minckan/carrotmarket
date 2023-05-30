@@ -46,9 +46,25 @@
             filePath = "Carrot_Market/Controller/UploadController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "configureUI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "28F1D24C-03C2-47E3-92DC-49819508809C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Carrot_Market/API/ProductService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "registerProduct(productInfo:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -281,8 +281,8 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         
         imageContainer.backgroundColor = .darkGray
         
-        productImageView.sd_setImage(with: product.productImageUrl)
-        
+//        productImageView.sd_setImage(with: product.productImageUrl)
+        let productImageViews = ImageCarouselView(images: product.productImageUrls ?? [])
 
         scrollView.addSubview(imageContainer)
         scrollView.addSubview(contentView)
@@ -297,7 +297,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.bottom.equalTo(scrollView).inset(10)
         }
         
-        scrollView.addSubview(productImageView)
+        scrollView.addSubview(productImageViews)
        
         footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
         

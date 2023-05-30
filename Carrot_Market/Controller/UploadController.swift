@@ -14,7 +14,7 @@ class UploadController: UIViewController {
     private let imagePicker = UIImagePickerController()
 //    private var productImage : UIImage?
     
-    private var productImages = [UIView]()
+    private var productImages = [UIImageView]()
     
     private let shareCheckbox = Checkbox(type: .share)
     private var negoCheckbox = Checkbox(type: .nego)
@@ -47,22 +47,6 @@ class UploadController: UIViewController {
         return collectionView
     }()
 
-    private lazy var addImageButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.lightBorder.cgColor
-        button.layer.cornerRadius = 8
-        button.backgroundColor = UIColor.rgb(red: 239, green: 246, blue: 250)
-        button.setImage(UIImage(named: "icon_camera")?.withTintColor(.black, renderingMode: .alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handleAddProductImage), for: .touchUpInside)
-        button.setTitle("0/10", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 12)
-        button.setTitleColor(.black, for: .normal)
-        button.alignTextBelow()
-        
-        return button
-    }()
-    
     private lazy var productNameContainer: UITextField = {
         let tf = UITextField()
         tf.placeholder = "제목"
@@ -123,28 +107,25 @@ class UploadController: UIViewController {
     
     // MARK: - Selectors
     @objc func handleUpload() {
+        print("handle upload!")
+        guard let name = productNameContainer.text else {return}
+        guard let price = productPriceTextField.text else {return}
+        guard let description = productDescriptionTextField.text else {return}
         
-        
-//        guard let productImage = productImage else {return}
-//        print("handle upload!")
-//        guard let name = ""
-//        guard let price = productPriceTextField.text else {return}
-//        guard let description = productDescriptionTextField.text else {return}
-//
-//        let product = ProductInformation(name: name, price: Int(price) ?? 0, description: description, productImage: productImage)
-//
-//        ProductService.shared.registerProduct(productInfo: product) {
-//            print("Registration of product Success!")
-//            self.dismiss(animated: true)
-//        }
+        let images = productImages.map { iv in
+            return iv.image!
+        }
+
+        let product = ProductInformation(name: name, price: Int(price) ?? 0, description: description, productImage: images, isFreeShareItem: shareCheckbox.enabled, acceptableNegotiation: negoCheckbox.enabled)
+
+        ProductService.shared.registerProduct(productInfo: product) {
+            print("Registration of product Success!")
+            self.dismiss(animated: true)
+        }
     }
     
     @objc func handleDismissal() {
         self.dismiss(animated: true)
-    }
-    
-    @objc func handleAddProductImage() {
-    
     }
     
     @objc func handleEditingPrice(_ textField: UITextField) {

@@ -21,6 +21,9 @@ class MainTabController : UITabBarController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+//        UserService.shared.logUserOut {
+//            print("DEBUG: user logged out.")
+//        }
         authenticateUserAndConfigureUI()
     }
     

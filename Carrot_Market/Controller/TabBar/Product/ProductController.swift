@@ -42,11 +42,17 @@ class ProductController: UICollectionViewController {
 
 
     // MARK: - Selectors
+    @objc func handleRefresh() {
+        fetchProduct()
+    }
+    
 
     // MARK: - API
     func fetchProduct() {
+        collectionView.refreshControl?.beginRefreshing()
         ProductService.shared.fetchProduct { products in
             self.products = products
+            self.collectionView.refreshControl?.endRefreshing()
         }
     }
     
@@ -55,6 +61,10 @@ class ProductController: UICollectionViewController {
         view.backgroundColor = .white
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.identifier)
         collectionView.backgroundColor = .white
+        
+        let refreshControl = UIRefreshControl()
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
     }
     
     func configureNavBar() {

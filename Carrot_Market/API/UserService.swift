@@ -63,4 +63,13 @@ struct UserService {
     func logUserIn(withEmail email: String, password: String, completion: @escaping(AuthDataResult?, Error?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password, completion: completion)
     }
+    
+    func logUserOut(completion: @escaping() -> Void) {
+        do {
+            try Auth.auth().signOut()
+            completion()
+        } catch let signOutError as NSError{
+            print("DEBUG: Error occured when signing out -> %@", signOutError)
+        }
+    }
 }

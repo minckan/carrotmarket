@@ -33,6 +33,8 @@ class ProductCell: UICollectionViewCell {
     private let productNameLabel : UILabel = {
        let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -59,7 +61,7 @@ class ProductCell: UICollectionViewCell {
         stack.axis = .vertical
         stack.spacing = 10
         addSubview(stack)
-        stack.anchor(top: topAnchor, left: productImageView.rightAnchor, paddingTop: 26,  paddingLeft: 10)
+        stack.anchor(top: topAnchor, left: productImageView.rightAnchor, right: rightAnchor, paddingTop: 26,  paddingLeft: 10, paddingRight: 10)
         
         let border = CALayer()
         let borderWidth = CGFloat(1.0)
@@ -89,7 +91,7 @@ class ProductCell: UICollectionViewCell {
         productNameLabel.text = product.name
         productPriceLabel.text = viewModel.priceText
         
-        guard let productImage = product.productImageUrl else {return}
+        let productImage = product.productImageUrls[0]
         productImageView.sd_setImage(with: productImage)
         productImageView.hero.id =  product.id
         
