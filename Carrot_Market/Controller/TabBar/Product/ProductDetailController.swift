@@ -435,6 +435,10 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         
         statusChangeButton.isHidden = !product.user.isCurrentUser
         usernameLabel.text = product.user.username
+        userProfileImg.sd_setImage(with: product.user.profileImageUrl)
+        userTemperatureLabel.text = String(product.user.userTemperature)
+        productNameLabel.text = product.name
+        captionLabel.text = product.contents
         
     }
     
