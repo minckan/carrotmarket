@@ -59,9 +59,7 @@ class ImageCarouselView : UIView {
         self.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300))
         self.images = images
         
-        self.backgroundColor = .black
-    
-        collectionView.backgroundColor = .red
+        collectionView.backgroundColor = .white
         
         setupCollectionView()
         collectionView.register(ImageCarouselCell.self, forCellWithReuseIdentifier: ImageCarouselCell.identifier)

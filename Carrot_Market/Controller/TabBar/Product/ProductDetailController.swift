@@ -431,6 +431,11 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.height.equalTo(400)
         }
       
+        
+        
+        statusChangeButton.isHidden = !product.user.isCurrentUser
+        usernameLabel.text = product.user.username
+        
     }
     
     func configureMap() {
