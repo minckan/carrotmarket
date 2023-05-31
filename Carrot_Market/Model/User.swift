@@ -24,7 +24,7 @@ struct User {
     var profileImageUrl: URL?
     let uid: String
     var position: Position?
-    let userTemperature : Double
+    var userTemperature = 36.5
     
     var isCurrentUser: Bool {
         return Auth.auth().currentUser?.uid == uid
@@ -35,7 +35,6 @@ struct User {
         self.fullname = dictionary["fullname"] as? String ?? ""
         self.username = dictionary["username"] as? String ?? ""
         self.email = dictionary["email"] as? String ?? ""
-        self.userTemperature = dictionary["userTemperature"] as? Double ?? 36.5
         
         if let profileImageUrlString = dictionary["profileImageUrl"] as? String {
             guard let url = URL(string: profileImageUrlString) else {return}

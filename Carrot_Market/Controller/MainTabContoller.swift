@@ -10,7 +10,7 @@ import FirebaseAuth
 
 class MainTabController : UITabBarController{
     // MARK: - Properties
-    
+    var userPosition: Position?
     
     let actionButton: ShadowButton = {
         let button = ShadowButton(type: .system)
@@ -56,6 +56,7 @@ class MainTabController : UITabBarController{
         
         view.addSubview(actionButton)
         actionButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
+        
     
     }
     

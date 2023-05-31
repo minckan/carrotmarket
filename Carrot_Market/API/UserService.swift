@@ -15,6 +15,7 @@ struct AuthCredential {
     let fullname: String
     let username: String
     let profileImage: UIImage
+    let position: Position
 }
 
 struct UserService {
@@ -34,6 +35,7 @@ struct UserService {
         let password = credential.password
         let fullname = credential.fullname
         let username = credential.username
+        let userPosition = credential.position
         
         guard let imageData = credential.profileImage.jpegData(compressionQuality: 0.3) else {return}
         
@@ -52,7 +54,7 @@ struct UserService {
                     
                     guard let uid = result?.user.uid else {return}
                     
-                    let values = ["email": email, "username": username, "fullname": fullname, "profileImageUrl": profileImageUrl]
+                    let values = ["email": email, "username": username, "fullname": fullname, "profileImageUrl": profileImageUrl, "position": userPosition]
                     
                     REF_USER.child(uid).updateChildValues(values, withCompletionBlock: completion)
                 }

@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
+import CoreLocation
 
 class RegistrationController : UIViewController {
 
@@ -15,6 +16,8 @@ class RegistrationController : UIViewController {
     
     private let imagePicker = UIImagePickerController()
     private var profileImage: UIImage?
+    
+    private var currentPosition:Position?
     
     private let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
@@ -87,10 +90,25 @@ class RegistrationController : UIViewController {
         return button
     }()
  
+    var locationManager = CLLocationManager()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            print("DEBUG: 위치 서비스 on")
+            locationManager.startUpdatingLocation()
+            printDebug(locationManager.location?.coordinate)
+        } else {
+            print("DEBUG: 위치 서비스 off")
+        }
+        
         configureUI()
     }
     
@@ -104,17 +122,20 @@ class RegistrationController : UIViewController {
     }
     
     @objc func handleRegistration() {
+        
         guard let profileImage = profileImage else {
             print("DEBUG: please selecr a profile image...")
             return
         }
+        
+        guard let position = currentPosition else {return}
 
         guard let email = emailTextField.text?.lowercased() else {return}
         guard let password = passwordTextField.text else {return}
         guard let fullname = fullNameTextField.text else {return}
         guard let username = usernameTextField.text?.lowercased() else {return}
         
-        let credential = AuthCredential(email: email, password: password, fullname: fullname, username: username, profileImage: profileImage)
+        let credential = AuthCredential(email: email, password: password, fullname: fullname, username: username, profileImage: profileImage, position: position)
         
         
         
@@ -181,5 +202,24 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
         self.plusPhotoButton.setImage(profileImage.withRenderingMode(.alwaysOriginal), for: .normal)
         
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension RegistrationController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        printDebug("didUpdateLocations")
+        
+        if let location = locations.first {
+            printDebug(location.coordinate.latitude)
+            printDebug(location.coordinate.longitude)
+            
+            currentPosition = Position(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
+            
+            saveData(key: Const.LAT, value: String(location.coordinate.latitude))
+            saveData(key: Const.LON, value: String(location.coordinate.longitude))
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        printDebug(error.localizedDescription)
     }
 }

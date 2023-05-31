@@ -100,7 +100,19 @@ class Utilities {
         return tv
     }
 
-    
+}
+
+
+public func printDebug(_ message: Any) {
+    print("DEBUG: \(message)")
+}
+
+public func saveData(key : String, value: String) {
+    UserDefaults.standard.set(value, forKey: key)
+}
+
+public func getData(key:String) {
+    UserDefaults.standard.string(forKey: key)
 }
 
 
