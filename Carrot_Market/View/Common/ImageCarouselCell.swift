@@ -12,19 +12,23 @@ class ImageCarouselCell : UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "ImageCarouselCell"
     
-    private let imageView = UIImageView()
-    
+    let imageView = UIImageView()
+
+
     var url : URL? {
         didSet {
             configure()
         }
     }
-    
+
     // MARK: - Lifecycles
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         backgroundColor = .brown
+        
+        contentView.backgroundColor = .gradeGreen
+
+       
     }
     
     required init?(coder: NSCoder) {
@@ -34,11 +38,20 @@ class ImageCarouselCell : UICollectionViewCell {
     // MARK: - Helpers
     func configure() {
         guard let url = url else {return}
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.width.height.equalToSuperview()
+        }
+        
         imageView.sd_setImage(with: url)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         
         addSubview(imageView)
+        
+     
         imageView.snp.makeConstraints { make in
-            make.edges.equalTo(self)
+            make.edges.width.height.equalToSuperview()
         }
     }
 }

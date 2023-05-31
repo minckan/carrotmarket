@@ -16,15 +16,16 @@ class ImageCarouselView : UIView {
         }
     }
     private let collectionViewFlowLayout: UICollectionViewFlowLayout = {
-      let layout = UICollectionViewFlowLayout()
-      layout.scrollDirection = .horizontal
-      layout.itemSize = Const.itemSize
-      layout.minimumLineSpacing = 0
-      layout.minimumInteritemSpacing = 0
-      return layout
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = Const.itemSize
+        layout.sectionInset = Const.collectionViewContentInset
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        return layout
     }()
     
-    private lazy var collectionView : UICollectionView = {
+    lazy var collectionView : UICollectionView = {
         
         let view = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewFlowLayout)
         view.contentInset = Const.collectionViewContentInset
@@ -38,11 +39,12 @@ class ImageCarouselView : UIView {
         view.decelerationRate = .fast
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        
+        
         return view
     }()
     
     var images : [URL]
-    
     
     // MARK: - Lifecycles
     override init(frame: CGRect) {
@@ -52,21 +54,25 @@ class ImageCarouselView : UIView {
     }
     
     convenience init(images: [URL]) {
+        
+        
         self.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300))
         self.images = images
         
+        self.backgroundColor = .black
+    
+        collectionView.backgroundColor = .red
+        
+        setupCollectionView()
         collectionView.register(ImageCarouselCell.self, forCellWithReuseIdentifier: ImageCarouselCell.identifier)
-        
         addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(self)
-        }
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
     
     // MARK: - Helpers
     func setupCollectionView() {
@@ -84,9 +90,20 @@ extension ImageCarouselView : UICollectionViewDelegate, UICollectionViewDelegate
         let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCarouselCell.identifier, for: indexPath) as! ImageCarouselCell
         
         cell.url = images[indexPath.row]
-        
+ 
+
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellWidth = collectionView.bounds.width
+        let cellHeight = collectionView.bounds.height
+        
+        
+        return CGSize(width: cellWidth, height: cellHeight)
     }
     
     
 }
+
+

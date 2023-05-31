@@ -33,7 +33,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     let collectionView = UserProductListView()
     let footer = ProductDetailFooter()
     
-    
     private let imageContainer = UIView()
     private lazy var productImageView : UIImageView = {
         let iv =  UIImageView()
@@ -282,9 +281,12 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         imageContainer.backgroundColor = .darkGray
         
 //        productImageView.sd_setImage(with: product.productImageUrl)
-        let productImageViews = ImageCarouselView(images: product.productImageUrls ?? [])
-
-        scrollView.addSubview(imageContainer)
+       
+    
+        
+        let productImageViews = ImageCarouselView(images: product.productImageUrls )
+        
+        scrollView.addSubview(productImageViews)
         scrollView.addSubview(contentView)
         
         contentView.distribution = .fill
@@ -292,12 +294,12 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         contentView.axis = .vertical
         
         contentView.snp.makeConstraints { make in
-            make.top.equalTo(imageContainer.snp.bottom)
+            make.top.equalTo(productImageViews.snp.bottom)
             make.left.right.equalTo(view).inset(15)
             make.bottom.equalTo(scrollView).inset(10)
         }
         
-        scrollView.addSubview(productImageViews)
+//        scrollView.addSubview(productImageViews)
        
         footer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, height: 100)
         
@@ -306,21 +308,21 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.left.right.equalTo(view)
             make.bottom.equalTo(footer.snp.top)
         }
+        
+        
 
-        imageContainer.snp.makeConstraints { make in
+        productImageViews.snp.makeConstraints { make in
             make.top.equalTo(scrollView)
             make.left.equalTo(view)
             make.right.equalTo(view)
-            make.height.equalTo(imageContainer.snp.width).multipliedBy(0.7)
+            make.height.equalTo(productImageViews.collectionView.snp.width).multipliedBy(0.7)
         }
                 
-        productImageView.snp.makeConstraints { make in
-            make.left.right.equalTo(imageContainer)
-            make.top.equalTo(view).priority(.high)
-            make.height.greaterThanOrEqualTo(imageContainer.snp.height).priority(.required)
-            make.bottom.equalTo(imageContainer.snp.bottom)
+        productImageViews.collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.top.equalTo(view)
         }
-
+        
         
         let userNameStack = UIStackView(arrangedSubviews: [usernameLabel, userLocationLabel])
         userNameStack.axis = .vertical
@@ -494,8 +496,7 @@ extension ProductDetailController: CommonNavigationButtonHandlerDelegate {
 extension ProductDetailController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
-        
-    
+
         if offsetY >= 200 {
             commonNav.type = .black
         } else {
@@ -520,4 +521,5 @@ extension ProductDetailController: UIScrollViewDelegate {
         return frame.minY < view.safeAreaInsets.top
     }
 }
+
 
