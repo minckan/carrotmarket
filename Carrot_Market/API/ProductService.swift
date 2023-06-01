@@ -16,8 +16,10 @@ struct ProductInformation {
     let price : Int
     let description : String
     let productImage : [UIImage]
+    let category: ProductCategory
     let isFreeShareItem: Bool?
     let acceptableNegotiation: Bool?
+    let tradingPosition : Position?
 }
 
 struct ProductService {
@@ -25,12 +27,8 @@ struct ProductService {
     
 
     
-    func registerProduct(productInfo info: ProductInformation, completion: @escaping()->Void) {
-        
-
+    func registerProduct(productInfo info: ProductInformation, completion: @escaping(DatabaseCompletion)) {
         guard let uid = Auth.auth().currentUser?.uid else {return}
-        // Dispatch Group 생성
-        let group = DispatchGroup()
         var imageUrls : [String] = []
         
         let semaphore = DispatchSemaphore(value: 1)
@@ -42,12 +40,12 @@ struct ProductService {
         let description = info.description
         let isShare = info.isFreeShareItem
         let isNegotiable = info.acceptableNegotiation
-        var representImageUrl:String?
+        let category = info.category
+        
+        let tradingPosition = info.tradingPosition
         
         
         for image in info.productImage {
-//            group.enter() // Dispatch group에 진입
-            
             dispatchQueue.async {
                 semaphore.wait()
                 
@@ -58,27 +56,24 @@ struct ProductService {
                     let uploadTask = storageRef.putData(imageData) { meta, err in
                         
                         if let error = err {
-                            print("이미지 업로드 에러: \(error.localizedDescription)")
-                            //                            group.leave() // Dispatch Group에서 빠져나옴
+                            printDebug("이미지 업로드 에러: \(error.localizedDescription)")
                             return
                         }
                         storageRef.downloadURL { url, err in
                             if let error = err {
-                                print("다운로드 URL 가져오기 에러: \(error.localizedDescription)")
+                                printDebug("다운로드 URL 가져오기 에러: \(error.localizedDescription)")
                                 return
                             }
                             if let productImageURL = url?.absoluteString {
                                 imageUrls.append(productImageURL)
                                 
                             }
-                            
-                            //                            group.leave()
                             semaphore.signal()
                         }
                     }
                     
                     uploadTask.observe(.progress) { snapshot in
-                        print("DEBUG: uploading...")
+                        printDebug("uploading...")
                     }
                 }
             }
@@ -87,26 +82,21 @@ struct ProductService {
         dispatchQueue.async(flags: .barrier) {
             semaphore.wait()
             
-            let values = ["uid": uid, "timestamp": Int(NSDate().timeIntervalSince1970), "name": name, "price": price, "description": description, "productImages": imageUrls, "isShare": isShare ?? false, "isNegotiable": isNegotiable ?? false, "representImageUrl": representImageUrl ?? ""] as [String : Any]
+            let values = ["uid": uid, "createAt": Int(NSDate().timeIntervalSince1970), "name": name, "price": price, "description": description, "productImages": imageUrls, "isShare": isShare ?? false, "isNegotiable": isNegotiable ?? false, "category" : category.rawValue, "latitude": tradingPosition?.lat ?? 0.0, "longitude": tradingPosition?.lon ?? 0.0] as [String : Any]
             
-            let ref = REF_PRODUCTS.childByAutoId()
             
-            ref.updateChildValues(values) { err, ref in
+            REF_PRODUCTS.childByAutoId().updateChildValues(values) { err, ref in
                 guard let productId = ref.key else {return}
-                
-                completion()
+                printDebug("product id is \(productId)")
+                REF_USER_PRODUCTS.child(uid).updateChildValues([productId: 1], withCompletionBlock: completion)
             }
             
             semaphore.signal()
         }
         
-//        group.notify(queue: .main) {
-//
-//        }
-
     }
     
-    func fetchProduct(completion: @escaping([Product])->Void) {
+    func fetchProducts(completion: @escaping([Product])->Void) {
         var products = [Product]()
         
         REF_PRODUCTS.observe(.childAdded) { snapshot in
@@ -116,6 +106,29 @@ struct ProductService {
             
             UserService.shared.fetchUser(uid: uid) { user in
                 let product = Product(user: user, id: productId, dictionary: dictionary)
+                products.append(product)
+                completion(products)
+            }
+        }
+    }
+    
+    func fetchProduct(withProductId productId: String, completion: @escaping(Product)->Void) {
+        REF_PRODUCTS.child(productId).observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String:Any] else {return}
+            guard let uid = dictionary["uid"] as? String else {return}
+            
+            UserService.shared.fetchUser(uid: uid) { user in
+                let product = Product(user: user, id: productId, dictionary: dictionary)
+                completion(product)
+            }
+        }
+    }
+    
+    func fetchProduct(forUser user: User, completion: @escaping([Product])->Void) {
+        var products = [Product]()
+        REF_USER_PRODUCTS.child(user.uid).observe(.childAdded) { snapshot in
+            let productId = snapshot.key
+            self.fetchProduct(withProductId: productId) { product in
                 products.append(product)
                 completion(products)
             }

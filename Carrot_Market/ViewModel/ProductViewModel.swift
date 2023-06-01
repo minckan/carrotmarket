@@ -17,4 +17,24 @@ struct ProductViewModel {
         
        return formattedPrice + "원"
     }
+    
+    var relatedProductLabel: String {
+        return product.user.username + "님의 판매상품"
+    }
+    
+    var updatedLabel : String {
+        let latestUpdatedPeriod = 3
+        if let updatedAt = product.updatedAt {
+            
+        }
+        return "끝올 \(latestUpdatedPeriod)일전"
+    }
+    
+    var likesAndViews : String {
+        return "관심 \(product.likes)﹒조회 \(product.views)"
+    }
+    
+    var temperatureValue: Float {
+        return Float(product.user.userTemperature / 100)
+    }
 }

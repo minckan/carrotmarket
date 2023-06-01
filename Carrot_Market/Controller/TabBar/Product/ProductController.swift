@@ -50,7 +50,7 @@ class ProductController: UICollectionViewController {
     // MARK: - API
     func fetchProduct() {
         collectionView.refreshControl?.beginRefreshing()
-        ProductService.shared.fetchProduct { products in
+        ProductService.shared.fetchProducts { products in
             self.products = products
             self.collectionView.refreshControl?.endRefreshing()
         }

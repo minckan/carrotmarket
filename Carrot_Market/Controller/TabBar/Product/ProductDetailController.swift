@@ -30,8 +30,9 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             }
         }
     }
-    let collectionView = UserProductListView()
+    private var userProductListView = UserProductListView()
     let footer = ProductDetailFooter()
+    var locationStack = UIStackView()
     
     private let imageContainer = UIView()
     private lazy var productImageView : UIImageView = {
@@ -53,7 +54,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     
     private let usernameLabel: UILabel = {
         let label = UILabel()
-        label.text = "노마드"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
@@ -69,7 +69,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         let label = UILabel()
         label.textColor = .gradeGreen
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.text = "40.4°C"
         return label
     }()
     
@@ -106,7 +105,6 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     
     private let productNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이케아 빌리책장 1 unit"
         label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
     }()
@@ -115,9 +113,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .lightGray
-        
-        let text = "가구/인테리어"
-        
+        let text = ""
         let attributedString = NSMutableAttributedString(string: text)
         attributedString.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: text.count))
         label.attributedText = attributedString
@@ -126,27 +122,15 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     }()
     private let productUpdatedCntLabel: UILabel = {
         let label = UILabel()
-        label.text = "끝올 3일전"
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.textColor = .lightGray
         return label
     }()
-    
-    private let productContentLabel: UILabel = {
-        let label = UILabel()
-        label.text = "끝올 3일전"
-        label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.textColor = .lightGray
-        return label
-    }()
+
     
     private let captionLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        
-        label.text = """
-        이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여 이케아 빌리책장 너무좋아요 진짜 너무 좋아요 좋아여
-        """
         label.numberOfLines = 0
         label.sizeToFit()
         label.lineBreakMode = .byCharWrapping
@@ -185,15 +169,12 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .lightGray
-        label.text = "관심 1﹒조회 46"
-        
         return label
     }()
     
 
     private let relatedProductLabel : UILabel = {
         let label = UILabel()
-        label.text = "멋쟁이님의 판매 상품"
         label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
@@ -201,7 +182,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         let button = UIButton(type: .system)
         button.imageView?.contentMode = .scaleAspectFit
         button.contentHorizontalAlignment = .center
-        button.setImage(UIImage(named: "arrow_right"), for: .normal)
+        button.setImage(UIImage(named: "arrow_right")?.withRenderingMode(.alwaysOriginal).withTintColor(.black), for: .normal)
         return button
     }()
     
@@ -218,9 +199,11 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         
         scrollView.delegate = self
 
+        fetchUserProduct()
 
         configureUI()
         configureNavBar()
+        setData()
 
 
     }
@@ -268,6 +251,32 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     }
     
     // MARK: - API
+    func fetchUserProduct() {
+        ProductService.shared.fetchProduct(forUser: product.user) { [self] products in
+            var productsWithout = products
+            productsWithout.removeAll(where: {$0.id == product.id})
+            
+            // 그리드 형식의 셀을 가정하고, 한 행에 두 개의 셀이 있다고 가정합니다
+            let numberOfColumns: CGFloat = 2 // 그리드의 열 개수
+            let cellHeight: CGFloat = (UIScreen.main.bounds.width - 30) / 2 // 셀의 높이
+            let cellSpacing: CGFloat = 15 // 셀 간격
+
+            // 전체 셀의 높이를 계산합니다
+            let numberOfCells = productsWithout.count
+            let numberOfRows = ceil(CGFloat(numberOfCells) / numberOfColumns) // 행 개수를 계산합니다
+            let totalCellHeight = numberOfRows * cellHeight // 전체 셀의 높이를 계산합니다
+            let totalSpacing = (numberOfRows - 1) * cellSpacing // 전체 간격의 크기를 계산합니다
+            let collectionViewHeight = totalCellHeight + totalSpacing // 콜렉션뷰의 전체 높이를 계산합니다
+
+            userProductListView.snp.updateConstraints({ make in
+                make.height.equalTo(collectionViewHeight)
+            })
+            userProductListView.products = productsWithout
+            userProductListView.collectionView.reloadData()
+            
+         
+        }
+    }
     
     // MARK: - Helpers
     func configureUI() {
@@ -387,7 +396,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         captionLabel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         
 
-        let locationStack = UIStackView(arrangedSubviews: [locationTitleLabel, UIView(), locationButton])
+        locationStack = UIStackView(arrangedSubviews: [locationTitleLabel, UIView(), locationButton])
         locationStack.alignment = .fill
         locationStack.distribution = .fill
         
@@ -399,6 +408,8 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         locationStack.snp.makeConstraints { make in
             make.top.equalTo(captionLabel.snp.bottom).offset(20)
         }
+        
+        locationStack.isHidden = true
 
         
         contentView.addArrangedSubview(mapView)
@@ -406,6 +417,8 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.top.equalTo(locationStack.snp.bottom).offset(20)
             make.height.equalTo(200)
         }
+        
+        mapView.isHidden = true
         
        
         contentView.addArrangedSubview(interestAndInquiryLabel)
@@ -421,24 +434,47 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
             make.top.equalTo(interestAndInquiryLabel.snp.bottom).offset(20)
         }
         
-        contentView.addArrangedSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(relatedProductStack.snp.bottom).offset(5)
+        userProductListView.delegate = self
+        
+        contentView.addArrangedSubview(userProductListView)
+        
+
+        let cellHeight = (UIScreen.main.bounds.width - 30) / 2
+        
+        userProductListView.snp.makeConstraints { make in
+            make.top.equalTo(relatedProductStack.snp.bottom).offset(10)
             make.left.equalTo(view)
             make.right.equalTo(view)
             make.bottom.equalTo(contentView)
             make.width.equalTo(contentView.snp.width)
-            make.height.equalTo(400)
+            make.height.equalTo(cellHeight)
         }
-      
-        
-        
+  
+
+    }
+    
+    func setData() {
         statusChangeButton.isHidden = !product.user.isCurrentUser
         usernameLabel.text = product.user.username
         userProfileImg.sd_setImage(with: product.user.profileImageUrl)
         userTemperatureLabel.text = String(product.user.userTemperature)
         productNameLabel.text = product.name
         captionLabel.text = product.contents
+
+        productCategoryLabel.text = product.category.rawValue
+        
+        let viewModel = ProductViewModel(product: product)
+        userTemperBar.setProgress(viewModel.temperatureValue, animated: false)
+        interestAndInquiryLabel.text = viewModel.likesAndViews
+        relatedProductLabel.text = viewModel.relatedProductLabel
+        
+        productUpdatedCntLabel.text = viewModel.updatedLabel
+        
+        if let tradingPosition = product.tradingPosition {
+            locationStack.isHidden = false
+            mapView.isHidden = false
+        }
+        
         
     }
     
@@ -531,4 +567,18 @@ extension ProductDetailController: UIScrollViewDelegate {
     }
 }
 
+extension ProductDetailController : UserProductListViewDelegate {
+    func handleItemSelect(product: Product) {
+        let controller = ProductDetailController(product: product)
+        let nav = DynamicStatusBarNavigation(rootViewController: controller)
+
+        nav.modalPresentationStyle = .fullScreen
+        nav.hero.isEnabled = true
+        nav.hero.modalAnimationType = .selectBy(presenting: .push(direction: .left), dismissing: .pull(direction: .right))
+    
+        
+        
+        present(nav, animated: true)
+    }
+}
 

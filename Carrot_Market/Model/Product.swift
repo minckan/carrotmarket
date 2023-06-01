@@ -19,13 +19,13 @@ struct Product {
     let isNegotiable: Bool
     var createdAt: Date!
     var updatedAt: Date?
-    var category: ProductCategory?
+    var category: ProductCategory
     var tradingPosition: Position?
     var views = 0
     var didLike = false
     var updateCount = 0
     
-    init(user: User, id: String, dictionary: [String: AnyObject]) {
+    init(user: User, id: String, dictionary: [String: Any]) {
         self.user = user
         self.id = id
         self.name = dictionary["name"] as? String ?? ""
@@ -33,8 +33,9 @@ struct Product {
         self.likes = dictionary["likes"] as? Int ?? 0
         self.isShare = dictionary["isShare"] as? Bool ?? false
         self.isNegotiable = dictionary["isNegotiable"] as? Bool ?? false
-        self.category = dictionary["category"] as? ProductCategory
-        self.contents = dictionary["contents"] as? String ?? ""
+        self.category = dictionary["category"] as? ProductCategory ?? ProductCategory.etc
+        self.contents = dictionary["description"] as? String ?? ""
+        self.tradingPosition = dictionary["tradingPosition"] as? Position
         
         if let productImageStrings = dictionary["productImages"] as? [String] {
             for urlString in productImageStrings {

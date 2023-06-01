@@ -8,15 +8,6 @@
 import Foundation
 import FirebaseAuth
 
-struct Position {
-    var lat:Double
-    var lon:Double
-    init(lat: Double, lon: Double) {
-        self.lat = lat
-        self.lon = lon
-    }
-}
-
 struct User {
     let fullname: String
     let username: String

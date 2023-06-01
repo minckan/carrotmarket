@@ -116,12 +116,9 @@ class UploadController: UIViewController {
             return iv.image!
         }
 
-        let product = ProductInformation(name: name, price: Int(price) ?? 0, description: description, productImage: images, isFreeShareItem: shareCheckbox.enabled, acceptableNegotiation: negoCheckbox.enabled)
+        let product = ProductInformation(name: name, price: Int(price) ?? 0, description: description, productImage: images, category: ProductCategory.etc, isFreeShareItem: shareCheckbox.enabled, acceptableNegotiation: negoCheckbox.enabled, tradingPosition: nil)
 
-        ProductService.shared.registerProduct(productInfo: product) {
-            print("Registration of product Success!")
-            self.dismiss(animated: true)
-        }
+        uploadProduct(withProduct: product)
     }
     
     @objc func handleDismissal() {
@@ -135,6 +132,12 @@ class UploadController: UIViewController {
     }
     
     // MARK: - API
+    func uploadProduct(withProduct product: ProductInformation) {
+        ProductService.shared.registerProduct(productInfo: product) {_,_ in
+            print("Registration of product Success!")
+            self.dismiss(animated: true)
+        }
+    }
     
     // MARK: - Helpers
 
