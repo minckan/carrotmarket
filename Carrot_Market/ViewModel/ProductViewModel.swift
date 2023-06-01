@@ -37,4 +37,24 @@ struct ProductViewModel {
     var temperatureValue: Float {
         return Float(product.user.userTemperature / 100)
     }
+    
+    var negotiableValue: NSAttributedString {
+        if product.isNegotiable {
+            return NSMutableAttributedString(string: "가격 제안 불가", attributes: [.font: UIFont.boldSystemFont(ofSize: 12), .foregroundColor: UIColor.lightGray])
+        } else {
+            return NSMutableAttributedString(string: "가격 제안 가능", attributes: [.font: UIFont.boldSystemFont(ofSize: 12), .foregroundColor: UIColor.carrotOrange500])
+        }
+    }
+    
+    var likeImage : UIImage {
+        var image = UIImage()
+        
+        if product.didLike {
+            image = UIImage(named: "like_filled")?.withTintColor(.red, renderingMode: .alwaysOriginal) ?? UIImage()
+        } else {
+            image = UIImage(named: "like_unselected") ?? UIImage()
+        }
+        
+        return image
+    }
 }

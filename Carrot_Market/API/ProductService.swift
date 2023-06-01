@@ -44,7 +44,6 @@ struct ProductService {
         
         let tradingPosition = info.tradingPosition
         
-        
         for image in info.productImage {
             dispatchQueue.async {
                 semaphore.wait()
@@ -87,7 +86,6 @@ struct ProductService {
             
             REF_PRODUCTS.childByAutoId().updateChildValues(values) { err, ref in
                 guard let productId = ref.key else {return}
-                printDebug("product id is \(productId)")
                 REF_USER_PRODUCTS.child(uid).updateChildValues([productId: 1], withCompletionBlock: completion)
             }
             
@@ -134,4 +132,26 @@ struct ProductService {
             }
         }
     }
+    
+    func likeProduct(forProduct product: Product, completion: @escaping(DatabaseCompletion)) {
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let likes = product.didLike ? product.likes - 1 : product.likes + 1
+        
+        REF_PRODUCTS.child(product.id).child("likes").setValue(likes)
+        
+        if product.didLike {
+            REF_USER_LIKES.child(uid).child(product.id).removeValue(completionBlock: completion)
+        } else {
+            REF_USER_LIKES.child(uid).updateChildValues([product.id: 1], withCompletionBlock: completion)
+        }
+    }
+    
+    func checkDidLiked(forProduct product: Product, completion: @escaping(Bool)->Void) {
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        REF_USER_LIKES.child(uid).child(product.id).observeSingleEvent(of: .value) { snapshot in
+            completion(snapshot.exists())
+        }
+    }
+    
 }

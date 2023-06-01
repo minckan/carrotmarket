@@ -31,7 +31,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         }
     }
     private var userProductListView = UserProductListView()
-    let footer = ProductDetailFooter()
+    let footer : ProductDetailFooter
     var locationStack = UIStackView()
     
     private let imageContainer = UIView()
@@ -216,6 +216,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
     
     init(product: Product) {
         self.product = product
+        self.footer = ProductDetailFooter(product)
         super.init(nibName: nil, bundle: nil)
     }
     

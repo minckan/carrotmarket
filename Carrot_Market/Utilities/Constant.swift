@@ -22,6 +22,8 @@ let STORAGE_PRODUCT_IMAGE = STORAGE_REF.child("product_image")
 
 let REF_PRODUCTS = DB_REF.child("products")
 let REF_USER_PRODUCTS = DB_REF.child("user-products")
+let REF_PRODUCT_LIKES = DB_REF.child("product-likes")
+let REF_USER_LIKES = DB_REF.child("user-likes")
 
 
 

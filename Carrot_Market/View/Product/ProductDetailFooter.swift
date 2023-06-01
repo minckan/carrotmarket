@@ -11,6 +11,8 @@ class ProductDetailFooter : UIView {
     // MARK: - Properties
     let view = UIView()
     
+    private var product:Product?
+    
     private let button : UIButton = {
         let button = UIButton()
         button.backgroundColor = .carrotOrange500
@@ -36,36 +38,56 @@ class ProductDetailFooter : UIView {
         button.setImage(UIImage(named: "like_unselected"), for: .normal)
         button.tintColor = .darkGray
         button.setDimensions(width: 20, height: 20)
+        button.addTarget(self, action: #selector(handleLikeButton), for: .touchUpInside)
         return button
     }()
     
     private let productPriceLabel : UILabel = {
        let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.text = "300,000원"
         return label
     }()
     
     private let statusLabel : UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.textColor = .lightGray
-        label.text = "가격 제안 불가"
         return label
     }()
     
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        configureUI()
-        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    convenience init(_ product: Product) {
+        self.init(frame: .zero)
+        self.product = product
+        configureUI()
+        fetchIfUserLikedProduct()
+    }
+    
+    // MARK: - Selectors
+    @objc func handleLikeButton() {
+        guard var product = product else {return}
+        ProductService.shared.likeProduct(forProduct: product) { err, ref in
+            product.didLike.toggle()
+            
+            let likes = product.didLike ? product.likes - 1 : product.likes + 1
+            product.likes = likes
+            
+        }
+    }
+    
     // MARK: - Helpers
+    func fetchIfUserLikedProduct() {
+        guard var product = product else {return}
+        ProductService.shared.checkDidLiked(forProduct: product) { didLike in
+            guard didLike == true else {return}
+            product.didLike = true
+        }
+    }
     func configureUI() {
         backgroundColor = .white
 
@@ -94,7 +116,12 @@ class ProductDetailFooter : UIView {
         button.anchor(right: view.rightAnchor)
         
   
+        guard let product = product else {return}
         
+        let viewModel = ProductViewModel(product: product)
+        statusLabel.attributedText = viewModel.negotiableValue
+        productPriceLabel.text = viewModel.priceText
+        likeButton.setImage(viewModel.likeImage, for: .normal)
         
       
     }
