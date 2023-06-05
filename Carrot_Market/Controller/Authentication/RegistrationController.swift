@@ -104,7 +104,7 @@ class RegistrationController : UIViewController {
         if CLLocationManager.locationServicesEnabled() {
             print("DEBUG: 위치 서비스 on")
             locationManager.startUpdatingLocation()
-            printDebug(locationManager.location?.coordinate)
+       
         } else {
             print("DEBUG: 위치 서비스 off")
         }
@@ -207,12 +207,8 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
 
 extension RegistrationController : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        printDebug("didUpdateLocations")
-        
+
         if let location = locations.first {
-            printDebug(location.coordinate.latitude)
-            printDebug(location.coordinate.longitude)
-            
             currentPosition = Position(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
             
             saveData(key: Const.LAT, value: String(location.coordinate.latitude))

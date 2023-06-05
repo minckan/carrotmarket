@@ -200,10 +200,11 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         scrollView.delegate = self
 
         fetchUserProduct()
-
-        configureUI()
         configureNavBar()
+        
+        configureUI()
         setData()
+       
 
 
     }
@@ -287,6 +288,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
         view.addSubview(footer)
         scrollView.contentInsetAdjustmentBehavior = .never
    
+        self.footer.delegate = self
         
         imageContainer.backgroundColor = .darkGray
         
@@ -509,6 +511,7 @@ class ProductDetailController : UIViewController, MKMapViewDelegate, CLLocationM
 //        activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
         self.present(activityVC, animated: true)
     }
+    
    
 }
 
@@ -580,6 +583,21 @@ extension ProductDetailController : UserProductListViewDelegate {
         
         
         present(nav, animated: true)
+    }
+}
+
+extension ProductDetailController: ProductDetailFooterDelegate {
+    func handleLikeButtonTapped(completion: @escaping(_ product: Product) -> Void) {
+        ProductService.shared.likeProduct(forProduct: product) { _,_ in
+            let likes = self.product.didLike ? self.product.likes - 1 : self.product.likes + 1
+            self.product.likes = likes
+            
+            self.product.didLike.toggle()
+            let viewModel = ProductViewModel(product: self.product)
+            self.interestAndInquiryLabel.text = viewModel.likesAndViews
+            
+            completion(self.product)
+        }
     }
 }
 

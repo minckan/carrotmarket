@@ -7,11 +7,17 @@
 
 import UIKit
 
+protocol ProductDetailFooterDelegate:AnyObject {
+    func handleLikeButtonTapped(completion: @escaping(_ product: Product)->Void)
+}
+
 class ProductDetailFooter : UIView {
     // MARK: - Properties
     let view = UIView()
     
     private var product:Product?
+    
+    weak var delegate: ProductDetailFooterDelegate?
     
     private let button : UIButton = {
         let button = UIButton()
@@ -65,29 +71,19 @@ class ProductDetailFooter : UIView {
         self.init(frame: .zero)
         self.product = product
         configureUI()
-        fetchIfUserLikedProduct()
+        
+        
     }
     
     // MARK: - Selectors
     @objc func handleLikeButton() {
-        guard var product = product else {return}
-        ProductService.shared.likeProduct(forProduct: product) { err, ref in
-            product.didLike.toggle()
-            
-            let likes = product.didLike ? product.likes - 1 : product.likes + 1
-            product.likes = likes
-            
+        delegate?.handleLikeButtonTapped {product in
+            self.updateViewModelData(product: product)
         }
     }
     
     // MARK: - Helpers
-    func fetchIfUserLikedProduct() {
-        guard var product = product else {return}
-        ProductService.shared.checkDidLiked(forProduct: product) { didLike in
-            guard didLike == true else {return}
-            product.didLike = true
-        }
-    }
+
     func configureUI() {
         backgroundColor = .white
 
@@ -115,15 +111,17 @@ class ProductDetailFooter : UIView {
         button.centerY(inView: view)
         button.anchor(right: view.rightAnchor)
         
-  
         guard let product = product else {return}
+        updateViewModelData(product: product)
         
+      
+    }
+    
+    func updateViewModelData(product: Product) {
         let viewModel = ProductViewModel(product: product)
         statusLabel.attributedText = viewModel.negotiableValue
         productPriceLabel.text = viewModel.priceText
         likeButton.setImage(viewModel.likeImage, for: .normal)
-        
-      
     }
     
     func addTopBorder(with color: UIColor?, andWidth borderWidth: CGFloat) {

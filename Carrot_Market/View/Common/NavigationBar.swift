@@ -146,7 +146,6 @@ class CommonNavigation {
         // navigation controller depth가 있을 경우 rootview로 이동하기 위한 로직.
         if let presentingVC = self.delegate?.controller.presentingViewController as? UINavigationController {
             self.delegate?.controller.dismiss(animated: true) {
-                printDebug(presentingVC)
                 presentingVC.popToRootViewController(animated: true)
             }
         }

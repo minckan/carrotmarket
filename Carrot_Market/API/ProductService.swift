@@ -138,7 +138,7 @@ struct ProductService {
         let likes = product.didLike ? product.likes - 1 : product.likes + 1
         
         REF_PRODUCTS.child(product.id).child("likes").setValue(likes)
-        
+
         if product.didLike {
             REF_USER_LIKES.child(uid).child(product.id).removeValue(completionBlock: completion)
         } else {

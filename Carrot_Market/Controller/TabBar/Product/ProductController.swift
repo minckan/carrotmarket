@@ -26,7 +26,6 @@ class ProductController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        fetchProduct()
     
     }
     
@@ -37,7 +36,10 @@ class ProductController: UICollectionViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        fetchProduct()
     }
+    
+    
     
 
 
@@ -52,6 +54,7 @@ class ProductController: UICollectionViewController {
         collectionView.refreshControl?.beginRefreshing()
         ProductService.shared.fetchProducts { products in
             self.products = products
+            self.checkIfUserLikeProduct()
             self.collectionView.refreshControl?.endRefreshing()
         }
     }
@@ -71,6 +74,23 @@ class ProductController: UICollectionViewController {
         commonNav.delegate = self
         navigationItem.rightBarButtonItems = [commonNav.notificationButton, commonNav.menuButton, commonNav.searchButton]
     }
+    
+    func checkIfUserLikeProduct() {
+     
+        self.products.forEach { product in
+            ProductService.shared.checkDidLiked(forProduct: product) { didLike in
+
+                guard didLike == true else {return}
+                
+                if let index = self.products.firstIndex(where: {$0.id == product.id}) {
+                    self.products[index].didLike = true
+                }
+            }
+        }
+      
+    }
+    
+
 }
 
 // MARK: - CollectionView Delegate / DataSource
